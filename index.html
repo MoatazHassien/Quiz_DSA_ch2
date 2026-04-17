@@ -3,934 +3,505 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chapter 2 – Arrays &amp; Linked Lists · Exam</title>
+<title>Chapter 2 — Arrays &amp; Linked Lists · Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #222; }
-
-  .page-header {
-    background: #fff;
-    border-bottom: 4px solid #1a3a5c;
-    padding: 26px 20px 18px;
-  }
-  .page-header h1 { font-size: 2rem; font-weight: 800; color: #1a3a5c; letter-spacing: -0.5px; }
-  .page-header .subtitle {
-    font-size: 0.78rem; font-weight: 700; letter-spacing: 2px;
-    color: #555; text-transform: uppercase; margin-top: 4px;
-  }
-  .page-header .q-count { float: right; font-size: 0.9rem; color: #888; font-weight: 600; margin-top: -28px; }
-
-  .score-bar {
-    position: sticky; top: 0; z-index: 100;
-    background: #1a3a5c; color: #fff;
-    display: flex; align-items: center; justify-content: center; gap: 24px;
-    padding: 10px 16px; font-size: 1rem; font-weight: 600;
-  }
-  .score-bar span { font-size: 1.25rem; font-weight: 800; color: #4ecca3; }
-
-  .container { max-width: 880px; margin: 0 auto; padding: 24px 16px 40px; }
-
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    border-left: 5px solid #1a3a5c;
-    padding: 10px 14px;
-    background: #fff;
-    margin: 28px 0 16px;
-    border-radius: 0 8px 8px 0;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .section-header h2 { font-size: 1.1rem; font-weight: 700; color: #1a3a5c; }
-  .section-badge {
-    background: #1a3a5c; color: #fff;
-    font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-    white-space: nowrap;
-  }
-
-  .question-card {
-    background: #fff;
-    border-radius: 10px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    border-left: 5px solid #ddd;
-    transition: border-color 0.3s;
-  }
-  .question-card.correct  { border-left-color: #22c55e; }
-  .question-card.wrong    { border-left-color: #ef4444; }
-
-  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .q-badge {
-    background: #1a3a5c; color: #fff;
-    font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;
-    flex-shrink: 0;
-  }
-  .q-badge.tricky     { background: #d97706; }
-  .q-badge.vtricky    { background: #dc2626; }
-  .tag-badge {
-    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;
-    background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;
-  }
-  .tag-badge.vt { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
-
-  .q-text { font-size: 0.97rem; font-weight: 600; line-height: 1.55; margin-bottom: 14px; }
-
-  pre, code {
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    background: #f0f2f5;
-    border-radius: 6px;
-    padding: 10px 14px;
-    display: block;
-    margin: 8px 0 12px;
-    white-space: pre-wrap;
-    line-height: 1.5;
-  }
-  code { display: inline; padding: 2px 6px; margin: 0; }
-
-  .options { display: flex; flex-direction: column; gap: 8px; }
-  .options-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-  }
-  .option-label {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 2px solid #e2e8f0;
-    cursor: pointer;
-    font-size: 0.93rem;
-    transition: background 0.15s, border-color 0.15s;
-    background: #fafafa;
-  }
-  .option-label:hover { border-color: #94a3b8; background: #f1f5f9; }
-  .option-label input[type="radio"] { margin-top: 2px; accent-color: #1a3a5c; flex-shrink: 0; }
-
-  .option-label.selected-correct { background: #dcfce7; border-color: #22c55e; font-weight: 600; }
-  .option-label.selected-wrong   { background: #fee2e2; border-color: #ef4444; }
-  .option-label.reveal-correct   { background: #dcfce7; border-color: #22c55e; font-weight: 600; }
-
-  .feedback {
-    margin-top: 10px; padding: 8px 12px; border-radius: 6px;
-    font-size: 0.9rem; font-weight: 600; display: none;
-  }
-  .feedback.correct { display: block; background: #dcfce7; color: #15803d; }
-  .feedback.wrong   { display: block; background: #fee2e2; color: #b91c1c; }
-
-  .btn-reset {
-    display: block; margin: 0 auto 32px;
-    padding: 12px 36px; background: #1a3a5c; color: #fff;
-    border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
-    font-weight: 700; letter-spacing: 0.5px;
-  }
-  .btn-reset:hover { background: #2d5a8e; }
-
-  @media(max-width:600px){ .options-grid { grid-template-columns: 1fr; } .option-label { font-size: 0.87rem; } }
+:root{
+  --bg:#060a10;--surface:#0d1520;--card:#111a27;--border:#1e2d40;
+  --text:#e8eef6;--muted:#5a7490;--accent:#c084fc;
+  --green:#22d46b;--red:#ff4e4e;--yellow:#f0c040;
+  --t-color:#34d399;--tr-color:#fb923c;--c-color:#818cf8;--tt-color:#f472b6;
+  --radius:14px;--transition:.2s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(circle at 15% 30%,rgba(192,132,252,.05) 0%,transparent 50%),
+                   radial-gradient(circle at 85% 70%,rgba(52,211,153,.04) 0%,transparent 50%);
+}
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,10,16,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:14px 28px;display:flex;align-items:center;gap:20px;
+}
+.hdr-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  color:var(--accent);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+.hdr-counter{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
+  margin-left:auto;white-space:nowrap;}
+.progress-wrap{flex:1;max-width:500px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--t-color));
+  border-radius:4px;transition:width .4s ease;width:0%}
+.score-pill{display:flex;align-items:center;gap:8px;background:var(--surface);
+  border:1px solid var(--border);border-radius:50px;padding:6px 16px;
+  font-size:13px;color:var(--muted);white-space:nowrap;}
+.score-num{font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace}
+main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:32px 36px;animation:slideIn .3s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:4px 10px;border-radius:50px;border:1px solid;}
+.badge-T{color:var(--t-color);border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08)}
+.badge-TR{color:var(--tr-color);border-color:rgba(251,146,60,.3);background:rgba(251,146,60,.08)}
+.badge-C{color:var(--c-color);border-color:rgba(129,140,248,.3);background:rgba(129,140,248,.08)}
+.badge-TT{color:var(--tt-color);border-color:rgba(244,114,182,.3);background:rgba(244,114,182,.08)}
+.q-text{font-family:'Crimson Pro',Georgia,serif;font-size:20px;line-height:1.65;
+  color:var(--text);margin-bottom:26px;}
+.q-code{display:block;font-family:'JetBrains Mono',monospace;font-size:13px;
+  background:#07111d;border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:8px;padding:14px 18px;margin:14px 0;line-height:1.9;
+  color:#c4b5fd;white-space:pre;overflow-x:auto;}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.opt{display:flex;align-items:flex-start;gap:14px;background:var(--surface);
+  border:1.5px solid var(--border);border-radius:10px;padding:14px 18px;cursor:pointer;
+  transition:var(--transition);font-size:15px;line-height:1.5;
+  font-family:'DM Sans',sans-serif;text-align:left;color:var(--text);}
+.opt:hover:not(.disabled){border-color:var(--accent);background:#120e1e}
+.opt-letter{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--muted);min-width:20px;padding-top:2px;}
+.opt.correct{border-color:var(--green)!important;background:rgba(34,212,107,.08)!important}
+.opt.wrong{border-color:var(--red)!important;background:rgba(255,78,78,.08)!important}
+.opt.correct .opt-letter{color:var(--green)}
+.opt.wrong .opt-letter{color:var(--red)}
+.opt.disabled{cursor:default}
+.opt .opt-code{font-family:'JetBrains Mono',monospace;font-size:12px;display:block;
+  margin-top:4px;color:#a5b4fc;white-space:pre;line-height:1.7}
+.feedback{border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.5;
+  margin-bottom:22px;display:none;}
+.feedback.correct{background:rgba(34,212,107,.1);border:1px solid rgba(34,212,107,.3);color:#7de8a8}
+.feedback.wrong{background:rgba(255,78,78,.1);border:1px solid rgba(255,78,78,.3);color:#ff9090}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.btn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  padding:11px 26px;border-radius:8px;cursor:pointer;border:1.5px solid;transition:var(--transition);}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#060a10}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-primary:disabled,.btn:disabled{opacity:.35;cursor:not-allowed;filter:none}
+#results{display:none;animation:slideIn .4s ease}
+.res-hero{text-align:center;padding:48px 0 36px}
+.res-arc{position:relative;width:160px;height:160px;margin:0 auto 24px}
+.res-arc svg{transform:rotate(-90deg)}
+.arc-bg{fill:none;stroke:var(--border);stroke-width:12}
+.arc-fill{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.res-pct{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;}
+.res-pct-num{font-size:32px;font-weight:700;color:var(--accent)}
+.res-pct-label{font-size:11px;color:var(--muted);letter-spacing:1px}
+.res-grade{font-size:48px;font-weight:700;margin-bottom:6px}
+.res-msg{font-size:16px;color:var(--muted);margin-bottom:6px}
+.res-score{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent)}
+.breakdown{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 28px;margin-bottom:24px;}
+.breakdown h3{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.cat-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cat-name{font-size:13px;min-width:180px}
+.cat-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.cat-score{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);min-width:55px;text-align:right}
+.btn-restart{display:block;margin:0 auto;font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:14px 36px;background:transparent;border:1.5px solid var(--accent);
+  color:var(--accent);border-radius:8px;cursor:pointer;transition:var(--transition);}
+.btn-restart:hover{background:var(--accent);color:#060a10}
 </style>
 </head>
 <body>
-
-<div class="page-header">
-  <span class="q-count">50 Questions</span>
-  <h1>Arrays &amp; Linked Lists</h1>
-  <div class="subtitle">DATA STRUCTURES &amp; ALGORITHMS &nbsp;·&nbsp; CHAPTER 2 &nbsp;-&nbsp; BY : ENG / MOATAZ HUSSEIN</div>
-</div>
-
-<div class="score-bar">
-  Score: <span id="score">0</span> / <span id="answered">0</span> &nbsp;|&nbsp; Answered: <span id="answeredCount">0</span> / 50
-</div>
-
-<div class="container">
-
-<!-- SECTION A -->
-<div class="section-header">
-  <h2>Section A &nbsp;·&nbsp; Tracing</h2>
-  <span class="section-badge">Q1 – Q18</span>
-</div>
-
-<!-- Q1 -->
-<div class="question-card" id="qc1">
-  <div class="q-header"><span class="q-badge">01</span></div>
-  <div class="q-text">Singly linked list: <strong>head→[10]→[20]→[30]→null</strong>.<br>Using <code>temp = head</code>, the statement <code>temp = temp.next</code> is executed <strong>twice</strong>. What is <code>temp.data</code>?</div>
-  <div class="options" id="q1">
-    <label class="option-label"><input type="radio" name="q1" value="A"> A) 10</label>
-    <label class="option-label"><input type="radio" name="q1" value="B"> B) 20</label>
-    <label class="option-label"><input type="radio" name="q1" value="C"> C) 30</label>
-    <label class="option-label"><input type="radio" name="q1" value="D"> D) null</label>
+<header>
+  <div class="hdr-title">CH.2 · Arrays &amp; Linked Lists</div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
+  <div class="hdr-counter" id="counter">1 / 100</div>
+  <div class="score-pill">Score <span class="score-num" id="scoreDisplay">0</span>/100</div>
+</header>
+<main>
+  <div id="quiz"></div>
+  <div id="results">
+    <div class="res-hero">
+      <div class="res-arc">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <circle class="arc-bg" cx="80" cy="80" r="68"/>
+          <circle class="arc-fill" id="arcFill" cx="80" cy="80" r="68"
+            stroke-dasharray="427.26" stroke-dashoffset="427.26"/>
+        </svg>
+        <div class="res-pct">
+          <span class="res-pct-num" id="resPct">0%</span>
+          <span class="res-pct-label">SCORE</span>
+        </div>
+      </div>
+      <div class="res-grade" id="resGrade">—</div>
+      <div class="res-msg" id="resMsg"></div>
+      <div class="res-score" id="resScore"></div>
+    </div>
+    <div class="breakdown">
+      <h3>Category Breakdown</h3>
+      <div id="catBreakdown"></div>
+    </div>
+    <button class="btn-restart" onclick="restart()">↺ RESTART QUIZ</button>
   </div>
-  <div class="feedback" id="fb1"></div>
-</div>
-
-<!-- Q2 -->
-<div class="question-card" id="qc2">
-  <div class="q-header"><span class="q-badge">02</span></div>
-  <div class="q-text">Array declared as <code>int[] a = {5, 10, 15, 20, 25}</code>. What is the value of <code>a[3]</code>?</div>
-  <div class="options" id="q2">
-    <label class="option-label"><input type="radio" name="q2" value="A"> A) 15</label>
-    <label class="option-label"><input type="radio" name="q2" value="B"> B) 20</label>
-    <label class="option-label"><input type="radio" name="q2" value="C"> C) 25</label>
-    <label class="option-label"><input type="radio" name="q2" value="D"> D) 10</label>
-  </div>
-  <div class="feedback" id="fb2"></div>
-</div>
-
-<!-- Q3 -->
-<div class="question-card" id="qc3">
-  <div class="q-header"><span class="q-badge">03</span></div>
-  <div class="q-text">LL: <strong>head→[5]→[10]→[15]→null</strong>. A new node with <code>data=1</code> is inserted at the top using: <code>new.next = head; head = new;</code><br>What is <code>head.data</code> after insertion?</div>
-  <div class="options" id="q3">
-    <label class="option-label"><input type="radio" name="q3" value="A"> A) 5</label>
-    <label class="option-label"><input type="radio" name="q3" value="B"> B) 1</label>
-    <label class="option-label"><input type="radio" name="q3" value="C"> C) 10</label>
-    <label class="option-label"><input type="radio" name="q3" value="D"> D) 15</label>
-  </div>
-  <div class="feedback" id="fb3"></div>
-</div>
-
-<!-- Q4 -->
-<div class="question-card" id="qc4">
-  <div class="q-header"><span class="q-badge">04</span></div>
-  <div class="q-text">LL: <strong>head→[5]→[10]→[15]→null</strong>. Delete from top using: <code>temp = head; head = temp.next; free(temp);</code><br>What is <code>head.data</code> after deletion?</div>
-  <div class="options" id="q4">
-    <label class="option-label"><input type="radio" name="q4" value="A"> A) 5</label>
-    <label class="option-label"><input type="radio" name="q4" value="B"> B) 10</label>
-    <label class="option-label"><input type="radio" name="q4" value="C"> C) 15</label>
-    <label class="option-label"><input type="radio" name="q4" value="D"> D) null</label>
-  </div>
-  <div class="feedback" id="fb4"></div>
-</div>
-
-<!-- Q5 -->
-<div class="question-card" id="qc5">
-  <div class="q-header"><span class="q-badge">05</span></div>
-  <div class="q-text">LL: <strong>head→[A]→[B]→[C]→null</strong>. A node with <code>data=X</code> is inserted at the <em>end</em>.<br>What does node C's <code>next</code> point to after insertion?</div>
-  <div class="options" id="q5">
-    <label class="option-label"><input type="radio" name="q5" value="A"> A) A</label>
-    <label class="option-label"><input type="radio" name="q5" value="B"> B) null</label>
-    <label class="option-label"><input type="radio" name="q5" value="C"> C) X (the new node)</label>
-    <label class="option-label"><input type="radio" name="q5" value="D"> D) B</label>
-  </div>
-  <div class="feedback" id="fb5"></div>
-</div>
-
-<!-- Q6 -->
-<div class="question-card" id="qc6">
-  <div class="q-header"><span class="q-badge">06</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[20]→[30]→null</strong>. Node with <code>data=50</code> is inserted after node 20 using: <code>new.next = temp.next; temp.next = new;</code> (temp points to node 20).<br>What does node 20 now point to?</div>
-  <div class="options" id="q6">
-    <label class="option-label"><input type="radio" name="q6" value="A"> A) 10</label>
-    <label class="option-label"><input type="radio" name="q6" value="B"> B) 30</label>
-    <label class="option-label"><input type="radio" name="q6" value="C"> C) 50</label>
-    <label class="option-label"><input type="radio" name="q6" value="D"> D) null</label>
-  </div>
-  <div class="feedback" id="fb6"></div>
-</div>
-
-<!-- Q7 -->
-<div class="question-card" id="qc7">
-  <div class="q-header"><span class="q-badge">07</span></div>
-  <div class="q-text">LL: <strong>head→[1]→[2]→[3]→[4]→null</strong>. Node with <code>data=3</code> is deleted using: <code>prev.next = temp.next; free(temp);</code><br>After deletion, what does node 2's <code>next</code> point to?</div>
-  <div class="options" id="q7">
-    <label class="option-label"><input type="radio" name="q7" value="A"> A) 3</label>
-    <label class="option-label"><input type="radio" name="q7" value="B"> B) 4</label>
-    <label class="option-label"><input type="radio" name="q7" value="C"> C) null</label>
-    <label class="option-label"><input type="radio" name="q7" value="D"> D) 1</label>
-  </div>
-  <div class="feedback" id="fb7"></div>
-</div>
-
-<!-- Q8 -->
-<div class="question-card" id="qc8">
-  <div class="q-header"><span class="q-badge">08</span></div>
-  <div class="q-text">Sorted array: <strong>{1, 3, 5, 8, 9, 12}</strong>. Insert value <strong>6</strong> in its correct sorted position.<br>How many elements must be shifted to make room?</div>
-  <div class="options" id="q8">
-    <label class="option-label"><input type="radio" name="q8" value="A"> A) 1</label>
-    <label class="option-label"><input type="radio" name="q8" value="B"> B) 2</label>
-    <label class="option-label"><input type="radio" name="q8" value="C"> C) 3</label>
-    <label class="option-label"><input type="radio" name="q8" value="D"> D) 4</label>
-  </div>
-  <div class="feedback" id="fb8"></div>
-</div>
-
-<!-- Q9 -->
-<div class="question-card" id="qc9">
-  <div class="q-header"><span class="q-badge">09</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[20]→[30]→null</strong>. The traversal loop <code>while(temp != null)</code> is executed.<br>How many iterations does the loop body execute before terminating?</div>
-  <div class="options" id="q9">
-    <label class="option-label"><input type="radio" name="q9" value="A"> A) 2</label>
-    <label class="option-label"><input type="radio" name="q9" value="B"> B) 3</label>
-    <label class="option-label"><input type="radio" name="q9" value="C"> C) 4</label>
-    <label class="option-label"><input type="radio" name="q9" value="D"> D) 1</label>
-  </div>
-  <div class="feedback" id="fb9"></div>
-</div>
-
-<!-- Q10 -->
-<div class="question-card" id="qc10">
-  <div class="q-header"><span class="q-badge">10</span></div>
-  <div class="q-text">Circular LL: <strong>head→[A]→[B]→[C]→(back to A)</strong>. While traversing, what condition signals that we have visited all nodes and returned to the start?</div>
-  <div class="options" id="q10">
-    <label class="option-label"><input type="radio" name="q10" value="A"> A) <code>temp.data == null</code></label>
-    <label class="option-label"><input type="radio" name="q10" value="B"> B) <code>temp == head</code></label>
-    <label class="option-label"><input type="radio" name="q10" value="C"> C) <code>temp.next == null</code></label>
-    <label class="option-label"><input type="radio" name="q10" value="D"> D) <code>temp.data == head.data</code></label>
-  </div>
-  <div class="feedback" id="fb10"></div>
-</div>
-
-<!-- Q11 -->
-<div class="question-card" id="qc11">
-  <div class="q-header"><span class="q-badge">11</span></div>
-  <div class="q-text">LL: <strong>head→[6]→[4]→[17]→[42]→null</strong>. The <em>last node</em> is deleted using the end-deletion algorithm.<br>After deletion, what is <code>data</code> of the new last node?</div>
-  <div class="options" id="q11">
-    <label class="option-label"><input type="radio" name="q11" value="A"> A) 42</label>
-    <label class="option-label"><input type="radio" name="q11" value="B"> B) 17</label>
-    <label class="option-label"><input type="radio" name="q11" value="C"> C) 4</label>
-    <label class="option-label"><input type="radio" name="q11" value="D"> D) 6</label>
-  </div>
-  <div class="feedback" id="fb11"></div>
-</div>
-
-<!-- Q12 -->
-<div class="question-card" id="qc12">
-  <div class="q-header"><span class="q-badge">12</span></div>
-  <div class="q-text">Doubly LL: <strong>null ← [10] ↔ [20] ↔ [30] → null</strong>, with <code>head→[10]</code> and <code>tail→[30]</code>.<br>What is the value of <code>tail.prev.prev.data</code>?</div>
-  <div class="options" id="q12">
-    <label class="option-label"><input type="radio" name="q12" value="A"> A) 30</label>
-    <label class="option-label"><input type="radio" name="q12" value="B"> B) 20</label>
-    <label class="option-label"><input type="radio" name="q12" value="C"> C) 10</label>
-    <label class="option-label"><input type="radio" name="q12" value="D"> D) null</label>
-  </div>
-  <div class="feedback" id="fb12"></div>
-</div>
-
-<!-- Q13 -->
-<div class="question-card" id="qc13">
-  <div class="q-header"><span class="q-badge">13</span></div>
-  <div class="q-text">Array <code>int[] scores = {79, 87, 94, 82, 67, 98, 87, 81, 74, 91}</code> (indices 0–9).<br>What is the value of <code>scores[5]</code>?</div>
-  <div class="options" id="q13">
-    <label class="option-label"><input type="radio" name="q13" value="A"> A) 67</label>
-    <label class="option-label"><input type="radio" name="q13" value="B"> B) 98</label>
-    <label class="option-label"><input type="radio" name="q13" value="C"> C) 87</label>
-    <label class="option-label"><input type="radio" name="q13" value="D"> D) 82</label>
-  </div>
-  <div class="feedback" id="fb13"></div>
-</div>
-
-<!-- Q14 -->
-<div class="question-card" id="qc14">
-  <div class="q-header"><span class="q-badge">14</span></div>
-  <div class="q-text">LL: <strong>head→[48]→[17]→[142]→null</strong>. Insert node with <code>data=93</code> after node 17: <code>new.next = temp.next; temp.next = new;</code> (temp = node 17).<br>What does node 17 now point to?</div>
-  <div class="options" id="q14">
-    <label class="option-label"><input type="radio" name="q14" value="A"> A) 48</label>
-    <label class="option-label"><input type="radio" name="q14" value="B"> B) null</label>
-    <label class="option-label"><input type="radio" name="q14" value="C"> C) 142</label>
-    <label class="option-label"><input type="radio" name="q14" value="D"> D) 93</label>
-  </div>
-  <div class="feedback" id="fb14"></div>
-</div>
-
-<!-- Q15 -->
-<div class="question-card" id="qc15">
-  <div class="q-header"><span class="q-badge">15</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[15]→[5]→null</strong>. This code runs:<br><code>temp=head; while(temp!=null){ print(temp.data); temp=temp.next; }</code><br>What is the output?</div>
-  <div class="options" id="q15">
-    <label class="option-label"><input type="radio" name="q15" value="A"> A) 5 15 10</label>
-    <label class="option-label"><input type="radio" name="q15" value="B"> B) 10 15 5</label>
-    <label class="option-label"><input type="radio" name="q15" value="C"> C) 5 10 15</label>
-    <label class="option-label"><input type="radio" name="q15" value="D"> D) 15 10 5</label>
-  </div>
-  <div class="feedback" id="fb15"></div>
-</div>
-
-<!-- Q16 -->
-<div class="question-card" id="qc16">
-  <div class="q-header"><span class="q-badge">16</span></div>
-  <div class="q-text">LL: <strong>head→[4]→[17]→[42]→null</strong>. Delete node 17 using: <code>prev.next = temp.next; free(temp);</code> (temp=node 17, prev=node 4).<br>What is the value of <code>prev.next.data</code> after deletion?</div>
-  <div class="options" id="q16">
-    <label class="option-label"><input type="radio" name="q16" value="A"> A) null</label>
-    <label class="option-label"><input type="radio" name="q16" value="B"> B) 17</label>
-    <label class="option-label"><input type="radio" name="q16" value="C"> C) 42</label>
-    <label class="option-label"><input type="radio" name="q16" value="D"> D) 4</label>
-  </div>
-  <div class="feedback" id="fb16"></div>
-</div>
-
-<!-- Q17 -->
-<div class="question-card" id="qc17">
-  <div class="q-header"><span class="q-badge">17</span></div>
-  <div class="q-text">Sorted array: <strong>{2, 5, 7, 10, 14}</strong>. Insert value <strong>8</strong> in sorted position.<br>How many elements must shift to the right?</div>
-  <div class="options" id="q17">
-    <label class="option-label"><input type="radio" name="q17" value="A"> A) 1</label>
-    <label class="option-label"><input type="radio" name="q17" value="B"> B) 2</label>
-    <label class="option-label"><input type="radio" name="q17" value="C"> C) 3</label>
-    <label class="option-label"><input type="radio" name="q17" value="D"> D) 4</label>
-  </div>
-  <div class="feedback" id="fb17"></div>
-</div>
-
-<!-- Q18 -->
-<div class="question-card" id="qc18">
-  <div class="q-header"><span class="q-badge">18</span></div>
-  <div class="q-text">LL: <strong>head→[3]→[6]→[9]→[12]→null</strong>. Node with <code>data=0</code> is inserted at the front.<br>What is <code>head.next.data</code> after insertion?</div>
-  <div class="options" id="q18">
-    <label class="option-label"><input type="radio" name="q18" value="A"> A) 0</label>
-    <label class="option-label"><input type="radio" name="q18" value="B"> B) 3</label>
-    <label class="option-label"><input type="radio" name="q18" value="C"> C) 6</label>
-    <label class="option-label"><input type="radio" name="q18" value="D"> D) 12</label>
-  </div>
-  <div class="feedback" id="fb18"></div>
-</div>
-
-<!-- SECTION B -->
-<div class="section-header">
-  <h2>Section B &nbsp;·&nbsp; Choose Correct Code</h2>
-  <span class="section-badge">Q19 – Q31</span>
-</div>
-
-<!-- Q19 -->
-<div class="question-card" id="qc19">
-  <div class="q-header"><span class="q-badge">19</span></div>
-  <div class="q-text">Which pseudocode correctly inserts a new node at the <strong>top</strong> of a singly linked list?</div>
-  <div class="options" id="q19">
-    <label class="option-label"><input type="radio" name="q19" value="A"> A) <code>head = new;  new.next = head;</code></label>
-    <label class="option-label"><input type="radio" name="q19" value="B"> B) <code>new.next = head;  head = new;</code></label>
-    <label class="option-label"><input type="radio" name="q19" value="C"> C) <code>new.next = null;  head = new;</code></label>
-    <label class="option-label"><input type="radio" name="q19" value="D"> D) <code>head.next = new;  head = new;</code></label>
-  </div>
-  <div class="feedback" id="fb19"></div>
-</div>
-
-<!-- Q20 -->
-<div class="question-card" id="qc20">
-  <div class="q-header"><span class="q-badge">20</span></div>
-  <div class="q-text">Which pseudocode correctly <strong>traverses</strong> a singly linked list and prints all nodes?</div>
-  <div class="options" id="q20">
-    <label class="option-label"><input type="radio" name="q20" value="A"> A)<pre>temp = head;
-while (temp.next != null) { print(temp.data); temp = temp.next; }</pre></label>
-    <label class="option-label"><input type="radio" name="q20" value="B"> B)<pre>temp = head;
-while (temp != null) { print(temp.data); temp = temp.next; }</pre></label>
-    <label class="option-label"><input type="radio" name="q20" value="C"> C)<pre>temp = head;
-while (temp != null) { temp = temp.next; print(temp.data); }</pre></label>
-    <label class="option-label"><input type="radio" name="q20" value="D"> D)<pre>temp = head.next;
-while (temp != null) { print(temp.data); temp = temp.next; }</pre></label>
-  </div>
-  <div class="feedback" id="fb20"></div>
-</div>
-
-<!-- Q21 -->
-<div class="question-card" id="qc21">
-  <div class="q-header"><span class="q-badge">21</span></div>
-  <div class="q-text">Which pseudocode correctly inserts a new node at the <strong>end</strong> of a non-empty singly linked list?</div>
-  <div class="options" id="q21">
-    <label class="option-label"><input type="radio" name="q21" value="A"> A)<pre>temp = head;
-while (temp.next != null) { temp = temp.next; }
-temp.next = new;  new.next = null;</pre></label>
-    <label class="option-label"><input type="radio" name="q21" value="B"> B)<pre>temp = head;
-while (temp != null) { temp = temp.next; }
-temp.next = new;</pre></label>
-    <label class="option-label"><input type="radio" name="q21" value="C"> C) <code>new.next = head;  head = new;</code></label>
-    <label class="option-label"><input type="radio" name="q21" value="D"> D) <code>temp = head;  new.next = temp.next;  temp.next = new;</code></label>
-  </div>
-  <div class="feedback" id="fb21"></div>
-</div>
-
-<!-- Q22 -->
-<div class="question-card" id="qc22">
-  <div class="q-header"><span class="q-badge">22</span></div>
-  <div class="q-text">Identify the <strong>critical bug</strong> in this delete-from-top code:</div>
-  <pre>temp = head
-free(temp)
-head = temp.next</pre>
-  <div class="options" id="q22">
-    <label class="option-label"><input type="radio" name="q22" value="A"> A) Should set head = null before freeing</label>
-    <label class="option-label"><input type="radio" name="q22" value="B"> B) <code>free(temp)</code> is called before saving <code>temp.next</code> — accessing freed memory is undefined behavior</label>
-    <label class="option-label"><input type="radio" name="q22" value="C"> C) <code>temp.next</code> should be <code>temp.prev</code></label>
-    <label class="option-label"><input type="radio" name="q22" value="D"> D) Nothing is wrong</label>
-  </div>
-  <div class="feedback" id="fb22"></div>
-</div>
-
-<!-- Q23 -->
-<div class="question-card" id="qc23">
-  <div class="q-header"><span class="q-badge">23</span></div>
-  <div class="q-text">Which pseudocode correctly deletes the <strong>last node</strong> from a singly linked list?</div>
-  <div class="options" id="q23">
-    <label class="option-label"><input type="radio" name="q23" value="A"> A)<pre>temp = head;
-while (temp.next != null) { last = temp; temp = temp.next; }
-last.next = null;  free(temp);</pre></label>
-    <label class="option-label"><input type="radio" name="q23" value="B"> B)<pre>temp = head;
-while (temp != null) { temp = temp.next; }
-free(temp);</pre></label>
-    <label class="option-label"><input type="radio" name="q23" value="C"> C) <code>temp = head;  free(temp);  last.next = null;</code></label>
-    <label class="option-label"><input type="radio" name="q23" value="D"> D) <code>head = null;  free(temp);</code></label>
-  </div>
-  <div class="feedback" id="fb23"></div>
-</div>
-
-<!-- Q24 -->
-<div class="question-card" id="qc24">
-  <div class="q-header"><span class="q-badge">24</span></div>
-  <div class="q-text">After traversing to the target node ( <code>temp</code> ), which correctly inserts a <strong>new node in the middle</strong>?</div>
-  <div class="options options-grid" id="q24">
-    <label class="option-label"><input type="radio" name="q24" value="A"> A) <code>temp.next = new; new.next = temp;</code></label>
-    <label class="option-label"><input type="radio" name="q24" value="B"> B) <code>new.next = temp; temp.next = new;</code></label>
-    <label class="option-label"><input type="radio" name="q24" value="C"> C) <code>new.next = temp.next; temp.next = new;</code></label>
-    <label class="option-label"><input type="radio" name="q24" value="D"> D) <code>temp.next = new; new.next = null;</code></label>
-  </div>
-  <div class="feedback" id="fb24"></div>
-</div>
-
-<!-- Q25 -->
-<div class="question-card" id="qc25">
-  <div class="q-header"><span class="q-badge">25</span></div>
-  <div class="q-text">What is the <strong>bug</strong> in this insert-at-end code?</div>
-  <pre>temp = head
-while (temp != null) {
-  temp = temp.next
-}
-temp.next = new
-new.next = null</pre>
-  <div class="options" id="q25">
-    <label class="option-label"><input type="radio" name="q25" value="A"> A) Loop should be <code>while(temp.next != null)</code> — loop exits with <code>temp == null</code>, causing a crash on <code>temp.next = new</code></label>
-    <label class="option-label"><input type="radio" name="q25" value="B"> B) Should use <code>temp.prev</code> instead of <code>temp.next</code></label>
-    <label class="option-label"><input type="radio" name="q25" value="C"> C) <code>new.next</code> should be <code>head</code></label>
-    <label class="option-label"><input type="radio" name="q25" value="D"> D) Nothing is wrong</label>
-  </div>
-  <div class="feedback" id="fb25"></div>
-</div>
-
-<!-- Q26 -->
-<div class="question-card" id="qc26">
-  <div class="q-header"><span class="q-badge">26</span></div>
-  <div class="q-text">Which correctly deletes a <strong>middle node</strong> ( <code>temp</code> ) given its predecessor ( <code>prev</code> )?</div>
-  <div class="options options-grid" id="q26">
-    <label class="option-label"><input type="radio" name="q26" value="A"> A) <code>prev.next = temp;  free(temp);</code></label>
-    <label class="option-label"><input type="radio" name="q26" value="B"> B) <code>prev.next = temp.next;  free(temp);</code></label>
-    <label class="option-label"><input type="radio" name="q26" value="C"> C) <code>temp.next = prev;  free(temp);</code></label>
-    <label class="option-label"><input type="radio" name="q26" value="D"> D) <code>free(temp);  prev.next = temp.next;</code></label>
-  </div>
-  <div class="feedback" id="fb26"></div>
-</div>
-
-<!-- Q27 -->
-<div class="question-card" id="qc27">
-  <div class="q-header"><span class="q-badge">27</span></div>
-  <div class="q-text">An array of size <strong>N</strong> is declared correctly and has valid index range:</div>
-  <div class="options" id="q27">
-    <label class="option-label"><input type="radio" name="q27" value="A"> A) <code>int[] arr = new int[N];</code> &nbsp; index from <strong>1 to N</strong></label>
-    <label class="option-label"><input type="radio" name="q27" value="B"> B) <code>int[] arr = new int[N];</code> &nbsp; index from <strong>0 to N</strong></label>
-    <label class="option-label"><input type="radio" name="q27" value="C"> C) <code>int[] arr = new int[N];</code> &nbsp; index from <strong>0 to N−1</strong></label>
-    <label class="option-label"><input type="radio" name="q27" value="D"> D) <code>int[] arr = new int[N+1];</code> &nbsp; index from <strong>0 to N</strong></label>
-  </div>
-  <div class="feedback" id="fb27"></div>
-</div>
-
-<!-- Q28 -->
-<div class="question-card" id="qc28">
-  <div class="q-header"><span class="q-badge">28</span></div>
-  <div class="q-text">Which is the correct loop for traversing a <strong>circular linked list</strong> starting from head (visiting all nodes exactly once)?</div>
-  <div class="options" id="q28">
-    <label class="option-label"><input type="radio" name="q28" value="A"> A)<pre>temp = head;
-while (temp != null) { print(temp.data); temp = temp.next; }</pre></label>
-    <label class="option-label"><input type="radio" name="q28" value="B"> B)<pre>temp = head;
-do { print(temp.data); temp = temp.next; } while (temp != head);</pre></label>
-    <label class="option-label"><input type="radio" name="q28" value="C"> C)<pre>temp = head;
-while (temp.next != null) { print(temp.data); temp = temp.next; }</pre></label>
-    <label class="option-label"><input type="radio" name="q28" value="D"> D)<pre>temp = head;
-while (temp.next != head) { temp = temp.next; }</pre></label>
-  </div>
-  <div class="feedback" id="fb28"></div>
-</div>
-
-<!-- Q29 -->
-<div class="question-card" id="qc29">
-  <div class="q-header"><span class="q-badge">29</span></div>
-  <div class="q-text">To access the <strong>5th element</strong> of an array <code>scores[]</code> (0-indexed), you write:</div>
-  <div class="options options-grid" id="q29">
-    <label class="option-label"><input type="radio" name="q29" value="A"> A) <code>scores[5]</code></label>
-    <label class="option-label"><input type="radio" name="q29" value="B"> B) <code>scores[4]</code></label>
-    <label class="option-label"><input type="radio" name="q29" value="C"> C) <code>scores[6]</code></label>
-    <label class="option-label"><input type="radio" name="q29" value="D"> D) <code>scores[1]</code></label>
-  </div>
-  <div class="feedback" id="fb29"></div>
-</div>
-
-<!-- Q30 -->
-<div class="question-card" id="qc30">
-  <div class="q-header"><span class="q-badge">30</span></div>
-  <div class="q-text">Which correctly represents the structure of a <strong>doubly linked list node</strong>?</div>
-  <div class="options options-grid" id="q30">
-    <label class="option-label"><input type="radio" name="q30" value="A"> A) <code>Node { data; next; }</code></label>
-    <label class="option-label"><input type="radio" name="q30" value="B"> B) <code>Node { data; prev; next; }</code></label>
-    <label class="option-label"><input type="radio" name="q30" value="C"> C) <code>Node { data; next; next2; }</code></label>
-    <label class="option-label"><input type="radio" name="q30" value="D"> D) <code>Node { data; head; tail; }</code></label>
-  </div>
-  <div class="feedback" id="fb30"></div>
-</div>
-
-<!-- Q31 -->
-<div class="question-card" id="qc31">
-  <div class="q-header"><span class="q-badge">31</span></div>
-  <div class="q-text">To insert at the top safely without losing the list, which order of operations is <strong>correct</strong>?</div>
-  <div class="options" id="q31">
-    <label class="option-label"><input type="radio" name="q31" value="A"> A) Set <code>head = new</code> first, then <code>new.next = head</code></label>
-    <label class="option-label"><input type="radio" name="q31" value="B"> B) Set <code>new.next = null</code> then <code>head = new</code></label>
-    <label class="option-label"><input type="radio" name="q31" value="C"> C) Set <code>new.next = head</code> first, then <code>head = new</code></label>
-    <label class="option-label"><input type="radio" name="q31" value="D"> D) Set <code>head.next = new</code> then <code>new = head</code></label>
-  </div>
-  <div class="feedback" id="fb31"></div>
-</div>
-
-<!-- SECTION C -->
-<div class="section-header">
-  <h2>Section C &nbsp;·&nbsp; Theoretical</h2>
-  <span class="section-badge">Q32 – Q38</span>
-</div>
-
-<!-- Q32 -->
-<div class="question-card" id="qc32">
-  <div class="q-header"><span class="q-badge">32</span></div>
-  <div class="q-text">Which data structure provides <strong>Direct Access</strong> to any element by its index?</div>
-  <div class="options options-grid" id="q32">
-    <label class="option-label"><input type="radio" name="q32" value="A"> A) Linked List</label>
-    <label class="option-label"><input type="radio" name="q32" value="B"> B) Stack</label>
-    <label class="option-label"><input type="radio" name="q32" value="C"> C) Array</label>
-    <label class="option-label"><input type="radio" name="q32" value="D"> D) Tree</label>
-  </div>
-  <div class="feedback" id="fb32"></div>
-</div>
-
-<!-- Q33 -->
-<div class="question-card" id="qc33">
-  <div class="q-header"><span class="q-badge">33</span></div>
-  <div class="q-text">What is the primary disadvantage of an array compared to a linked list?</div>
-  <div class="options" id="q33">
-    <label class="option-label"><input type="radio" name="q33" value="A"> A) Slower element access time</label>
-    <label class="option-label"><input type="radio" name="q33" value="B"> B) Fixed size — cannot grow or shrink dynamically during execution</label>
-    <label class="option-label"><input type="radio" name="q33" value="C"> C) Cannot store integers</label>
-    <label class="option-label"><input type="radio" name="q33" value="D"> D) Each element requires an extra pointer</label>
-  </div>
-  <div class="feedback" id="fb33"></div>
-</div>
-
-<!-- Q34 -->
-<div class="question-card" id="qc34">
-  <div class="q-header"><span class="q-badge">34</span></div>
-  <div class="q-text">In a singly linked list, what value does the <strong>last node</strong> store in its address (next) part?</div>
-  <div class="options options-grid" id="q34">
-    <label class="option-label"><input type="radio" name="q34" value="A"> A) Address of head</label>
-    <label class="option-label"><input type="radio" name="q34" value="B"> B) Address of previous node</label>
-    <label class="option-label"><input type="radio" name="q34" value="C"> C) Null</label>
-    <label class="option-label"><input type="radio" name="q34" value="D"> D) 0</label>
-  </div>
-  <div class="feedback" id="fb34"></div>
-</div>
-
-<!-- Q35 -->
-<div class="question-card" id="qc35">
-  <div class="q-header"><span class="q-badge">35</span></div>
-  <div class="q-text">Which type of linked list allows traversal in <strong>both forward and backward</strong> directions?</div>
-  <div class="options options-grid" id="q35">
-    <label class="option-label"><input type="radio" name="q35" value="A"> A) Singly linked list</label>
-    <label class="option-label"><input type="radio" name="q35" value="B"> B) Circular linked list</label>
-    <label class="option-label"><input type="radio" name="q35" value="C"> C) Doubly linked list</label>
-    <label class="option-label"><input type="radio" name="q35" value="D"> D) Array</label>
-  </div>
-  <div class="feedback" id="fb35"></div>
-</div>
-
-<!-- Q36 -->
-<div class="question-card" id="qc36">
-  <div class="q-header"><span class="q-badge">36</span></div>
-  <div class="q-text">What is the time complexity of inserting a node at the <strong>beginning</strong> of a singly linked list?</div>
-  <div class="options options-grid" id="q36">
-    <label class="option-label"><input type="radio" name="q36" value="A"> A) O(n)</label>
-    <label class="option-label"><input type="radio" name="q36" value="B"> B) O(log n)</label>
-    <label class="option-label"><input type="radio" name="q36" value="C"> C) O(1)</label>
-    <label class="option-label"><input type="radio" name="q36" value="D"> D) O(n²)</label>
-  </div>
-  <div class="feedback" id="fb36"></div>
-</div>
-
-<!-- Q37 -->
-<div class="question-card" id="qc37">
-  <div class="q-header"><span class="q-badge">37</span></div>
-  <div class="q-text">Why does inserting into the middle of a sorted <strong>array</strong> require extra work compared to a linked list?</div>
-  <div class="options" id="q37">
-    <label class="option-label"><input type="radio" name="q37" value="A"> A) Array nodes must have their pointers reconnected</label>
-    <label class="option-label"><input type="radio" name="q37" value="B"> B) Elements after the insertion point must be shifted right to make room</label>
-    <label class="option-label"><input type="radio" name="q37" value="C"> C) A new array must be allocated each time</label>
-    <label class="option-label"><input type="radio" name="q37" value="D"> D) The array must be sorted again from scratch</label>
-  </div>
-  <div class="feedback" id="fb37"></div>
-</div>
-
-<!-- Q38 -->
-<div class="question-card" id="qc38">
-  <div class="q-header"><span class="q-badge">38</span></div>
-  <div class="q-text">Which of the following is <strong>NOT</strong> one of the four types of linked lists?</div>
-  <div class="options options-grid" id="q38">
-    <label class="option-label"><input type="radio" name="q38" value="A"> A) Singly linked list</label>
-    <label class="option-label"><input type="radio" name="q38" value="B"> B) Doubly linked list</label>
-    <label class="option-label"><input type="radio" name="q38" value="C"> C) Circular linked list</label>
-    <label class="option-label"><input type="radio" name="q38" value="D"> D) Priority linked list</label>
-  </div>
-  <div class="feedback" id="fb38"></div>
-</div>
-
-<!-- SECTION D -->
-<div class="section-header">
-  <h2>Section D &nbsp;·&nbsp; Tricky Tracing</h2>
-  <span class="section-badge">Q39 – Q50</span>
-</div>
-
-<!-- Q39 -->
-<div class="question-card" id="qc39">
-  <div class="q-header"><span class="q-badge tricky">39</span> <span class="tag-badge">TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[20]→[30]→null</strong>. Perform these operations in order:<br>① Insert 5 at top &nbsp; ② Delete from top &nbsp; ③ Delete from top<br>What is <code>head.data</code> after all three operations?</div>
-  <div class="options options-grid" id="q39">
-    <label class="option-label"><input type="radio" name="q39" value="A"> A) 5</label>
-    <label class="option-label"><input type="radio" name="q39" value="B"> B) 10</label>
-    <label class="option-label"><input type="radio" name="q39" value="C"> C) 20</label>
-    <label class="option-label"><input type="radio" name="q39" value="D"> D) 30</label>
-  </div>
-  <div class="feedback" id="fb39"></div>
-</div>
-
-<!-- Q40 -->
-<div class="question-card" id="qc40">
-  <div class="q-header"><span class="q-badge vtricky">40</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[48]→[17]→[142]→null</strong>. Insert node (data=93) after node 17. The two-line code is executed in <strong>reversed order</strong> by mistake:<br><code>temp.next = new;</code> (line 1, run first)<br><code>new.next = temp.next;</code> (line 2, run second)<br>What is the result?</div>
-  <div class="options" id="q40">
-    <label class="option-label"><input type="radio" name="q40" value="A"> A) 93 is inserted correctly between 17 and 142</label>
-    <label class="option-label"><input type="radio" name="q40" value="B"> B) Node 93 ends up pointing to itself (cycle), and node 142 is permanently lost</label>
-    <label class="option-label"><input type="radio" name="q40" value="C"> C) head becomes null</label>
-    <label class="option-label"><input type="radio" name="q40" value="D"> D) Node 17 is deleted from the list</label>
-  </div>
-  <div class="feedback" id="fb40"></div>
-</div>
-
-<!-- Q41 -->
-<div class="question-card" id="qc41">
-  <div class="q-header"><span class="q-badge vtricky">41</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">Array: <code>int[] a = {3, 1, 4, 1, 5, 9, 2, 6}</code> (indices 0–7).<br>What is the value of <code>a[a[2]]</code>?</div>
-  <div class="options options-grid" id="q41">
-    <label class="option-label"><input type="radio" name="q41" value="A"> A) 4</label>
-    <label class="option-label"><input type="radio" name="q41" value="B"> B) 1</label>
-    <label class="option-label"><input type="radio" name="q41" value="C"> C) 5</label>
-    <label class="option-label"><input type="radio" name="q41" value="D"> D) 9</label>
-  </div>
-  <div class="feedback" id="fb41"></div>
-</div>
-
-<!-- Q42 -->
-<div class="question-card" id="qc42">
-  <div class="q-header"><span class="q-badge vtricky">42</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[1]→[2]→[3]→[4]→[5]→null</strong>. This traversal runs:</div>
-  <pre>temp = head
-while (temp != null) {
-  temp = temp.next
-  print(temp.data)
-}</pre>
-  <div class="options" id="q42">
-    <label class="option-label"><input type="radio" name="q42" value="A"> A) Prints correctly: 1 2 3 4 5</label>
-    <label class="option-label"><input type="radio" name="q42" value="B"> B) Prints 2 3 4 5 then crashes — <code>temp</code> becomes null and <code>temp.data</code> throws an error</label>
-    <label class="option-label"><input type="radio" name="q42" value="C"> C) Infinite loop</label>
-    <label class="option-label"><input type="radio" name="q42" value="D"> D) Prints nothing — loop body never executes</label>
-  </div>
-  <div class="feedback" id="fb42"></div>
-</div>
-
-<!-- Q43 -->
-<div class="question-card" id="qc43">
-  <div class="q-header"><span class="q-badge tricky">43</span> <span class="tag-badge">TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[20]→[30]→null</strong>. The end-deletion algorithm runs its while loop to completion. What do <code>temp</code> and <code>last</code> point to when the loop terminates?</div>
-  <div class="options options-grid" id="q43">
-    <label class="option-label"><input type="radio" name="q43" value="A"> A) temp→[30], last→[20]</label>
-    <label class="option-label"><input type="radio" name="q43" value="B"> B) temp→null, last→[30]</label>
-    <label class="option-label"><input type="radio" name="q43" value="C"> C) temp→[20], last→[10]</label>
-    <label class="option-label"><input type="radio" name="q43" value="D"> D) temp→[30], last→[10]</label>
-  </div>
-  <div class="feedback" id="fb43"></div>
-</div>
-
-<!-- Q44 -->
-<div class="question-card" id="qc44">
-  <div class="q-header"><span class="q-badge vtricky">44</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">Sorted array: <strong>{1, 2, 4, 5, 6}</strong>. Insert element <strong>3</strong> in sorted position (index 2).<br>Counting each individual assignment operation (shifts + the final store), how many total assignments are needed?</div>
-  <div class="options options-grid" id="q44">
-    <label class="option-label"><input type="radio" name="q44" value="A"> A) 2</label>
-    <label class="option-label"><input type="radio" name="q44" value="B"> B) 3</label>
-    <label class="option-label"><input type="radio" name="q44" value="C"> C) 4</label>
-    <label class="option-label"><input type="radio" name="q44" value="D"> D) 5</label>
-  </div>
-  <div class="feedback" id="fb44"></div>
-</div>
-
-<!-- Q45 -->
-<div class="question-card" id="qc45">
-  <div class="q-header"><span class="q-badge tricky">45</span> <span class="tag-badge">TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[A]→[B]→[C]→null</strong>. After this loop to find the insertion point for end-insertion: <code>temp=head; while(temp.next != null){ temp=temp.next; }</code><br>What does <code>temp</code> point to when the loop exits?</div>
-  <div class="options options-grid" id="q45">
-    <label class="option-label"><input type="radio" name="q45" value="A"> A) A</label>
-    <label class="option-label"><input type="radio" name="q45" value="B"> B) B</label>
-    <label class="option-label"><input type="radio" name="q45" value="C"> C) C</label>
-    <label class="option-label"><input type="radio" name="q45" value="D"> D) null</label>
-  </div>
-  <div class="feedback" id="fb45"></div>
-</div>
-
-<!-- Q46 -->
-<div class="question-card" id="qc46">
-  <div class="q-header"><span class="q-badge tricky">46</span> <span class="tag-badge">TRICKY</span></div>
-  <div class="q-text">Doubly LL: <strong>null ← [10] ↔ [20] ↔ [30] → null</strong>, <code>head→[10]</code>, <code>tail→[30]</code>.<br>What is the value of <code>tail.prev.prev.data</code>?</div>
-  <div class="options options-grid" id="q46">
-    <label class="option-label"><input type="radio" name="q46" value="A"> A) 30</label>
-    <label class="option-label"><input type="radio" name="q46" value="B"> B) 20</label>
-    <label class="option-label"><input type="radio" name="q46" value="C"> C) 10</label>
-    <label class="option-label"><input type="radio" name="q46" value="D"> D) null</label>
-  </div>
-  <div class="feedback" id="fb46"></div>
-</div>
-
-<!-- Q47 -->
-<div class="question-card" id="qc47">
-  <div class="q-header"><span class="q-badge vtricky">47</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[5]→[3]→[7]→[1]→null</strong>. This code runs:</div>
-  <pre>temp = head;  count = 0;
-while (temp != null) {
-  if (temp.data > 4)
-    count = count + 1;
-  temp = temp.next;
-}</pre>
-  <div class="q-text" style="margin-top:0;">What is the final value of <code>count</code>?</div>
-  <div class="options options-grid" id="q47">
-    <label class="option-label"><input type="radio" name="q47" value="A"> A) 1</label>
-    <label class="option-label"><input type="radio" name="q47" value="B"> B) 2</label>
-    <label class="option-label"><input type="radio" name="q47" value="C"> C) 3</label>
-    <label class="option-label"><input type="radio" name="q47" value="D"> D) 4</label>
-  </div>
-  <div class="feedback" id="fb47"></div>
-</div>
-
-<!-- Q48 -->
-<div class="question-card" id="qc48">
-  <div class="q-header"><span class="q-badge vtricky">48</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">LL: <strong>head→[10]→[20]→[30]→null</strong>. This code runs:</div>
-  <pre>temp = head;
-while (temp.next != null) { temp = temp.next; }
-temp.data = 99;</pre>
-  <div class="q-text" style="margin-top:0;">What is the list after execution?</div>
-  <div class="options" id="q48">
-    <label class="option-label"><input type="radio" name="q48" value="A"> A) head→[10]→[20]→[99]→null</label>
-    <label class="option-label"><input type="radio" name="q48" value="B"> B) head→[99]→[20]→[30]→null</label>
-    <label class="option-label"><input type="radio" name="q48" value="C"> C) head→[10]→[99]→[30]→null</label>
-    <label class="option-label"><input type="radio" name="q48" value="D"> D) head→[10]→[20]→[30]→null (unchanged)</label>
-  </div>
-  <div class="feedback" id="fb48"></div>
-</div>
-
-<!-- Q49 -->
-<div class="question-card" id="qc49">
-  <div class="q-header"><span class="q-badge vtricky">49</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">Singly LL: <strong>A→B→C→D→null</strong>. Only the <code>head</code> pointer is available. To delete node <strong>C</strong>, what must be done?</div>
-  <div class="options" id="q49">
-    <label class="option-label"><input type="radio" name="q49" value="A"> A) Just access C directly and set <code>C.next = null</code></label>
-    <label class="option-label"><input type="radio" name="q49" value="B"> B) Traverse from head to reach node B (C's predecessor), then set <code>B.next = D</code>, then free C</label>
-    <label class="option-label"><input type="radio" name="q49" value="C"> C) Set <code>C = null</code> directly</label>
-    <label class="option-label"><input type="radio" name="q49" value="D"> D) Just call <code>free(C)</code> — no pointer update needed</label>
-  </div>
-  <div class="feedback" id="fb49"></div>
-</div>
-
-<!-- Q50 -->
-<div class="question-card" id="qc50">
-  <div class="q-header"><span class="q-badge vtricky">50</span> <span class="tag-badge vt">VERY TRICKY</span></div>
-  <div class="q-text">Array of size 5: <strong>{2, 4, 6, 8, 10}</strong> (indices 0–4). Insert value <strong>5</strong> in its sorted position (between 4 and 6). Elements are shifted right to make room. What is the value at <code>array[4]</code> after the shift (before the overflow is handled)?</div>
-  <div class="options" id="q50">
-    <label class="option-label"><input type="radio" name="q50" value="A"> A) 10 (unchanged)</label>
-    <label class="option-label"><input type="radio" name="q50" value="B"> B) 8 (10 is shifted out — data loss)</label>
-    <label class="option-label"><input type="radio" name="q50" value="C"> C) 6</label>
-    <label class="option-label"><input type="radio" name="q50" value="D"> D) 5</label>
-  </div>
-  <div class="feedback" id="fb50"></div>
-</div>
-
-<button class="btn-reset" onclick="resetQuiz()">🔄 Reset Quiz</button>
-
-</div><!-- end container -->
-
+</main>
 <script>
-const ANSWERS = {
-  1:'C',2:'B',3:'B',4:'B',5:'C',6:'C',7:'B',8:'C',9:'B',10:'B',
-  11:'B',12:'C',13:'B',14:'D',15:'B',16:'C',17:'B',18:'B',19:'B',20:'B',
-  21:'A',22:'B',23:'A',24:'C',25:'A',26:'B',27:'C',28:'B',29:'B',30:'B',
-  31:'C',32:'C',33:'B',34:'C',35:'C',36:'C',37:'B',38:'D',39:'C',40:'B',
-  41:'C',42:'B',43:'A',44:'C',45:'C',46:'C',47:'B',48:'A',49:'B',50:'B'
+const Q=[
+// ── THEORETICAL (15) ─────────────────────────────────────────────────
+{t:"T",q:"In a singly linked list, each node consists of:",
+ o:["Data part only","Address part only","Data part + Address part","Two data parts"],a:2},
+{t:"T",q:"The last node in a singly linked list must have which value in its address part?",
+ o:["The address of the first node","NULL","Zero (0)","The address of the previous node"],a:1},
+{t:"T",q:"To keep track of a linked list at all times, you must know:",
+ o:["The total size of the list","The pointer to the first element (head)","The last element's data value","The middle element's address"],a:1},
+{t:"T",q:"In a <strong>doubly linked list</strong>, how many NULL pointer values exist in the entire list?",
+ o:["One (only at the last node)","Two (one at the first node, one at the last node)","None — all nodes are connected","One at the first node only"],a:1},
+{t:"T",q:"In a <strong>circular linked list</strong>, the last node's address part points to:",
+ o:["NULL","The last node itself","The first node (head)","The second node"],a:2},
+{t:"T",q:"How do we know when we have <em>finished traversing</em> a circular linked list?",
+ o:["temp == NULL","temp.next == NULL","temp.next == head","temp.data == head.data"],a:2},
+{t:"T",q:"Which type of linked list allows traversal in <strong>both forward and backward</strong> directions?",
+ o:["Singly linked list","Circular linked list","Doubly linked list","Singly circular linked list"],a:2},
+{t:"T",q:"In a doubly linked list, we usually maintain two pointers to track the list. These are named:",
+ o:["head and temp","head and tail","first and last","prev and next"],a:1},
+{t:"T",q:"<em>Traversing</em> a linked list is defined as:",
+ o:["Deleting each node sequentially","Visiting each node exactly once for a certain purpose","Sorting the nodes in order","Counting only the data values"],a:1},
+{t:"T",q:"Which of the following is a key <strong>advantage</strong> of a linked list over an array?",
+ o:["Provides direct (random) access","Uses less memory per element than arrays","Dynamic size — can grow or shrink during execution","Faster element access time"],a:2},
+{t:"T",q:"An array of size N is indexed from:",
+ o:["1 to N","0 to N","0 to N−1","1 to N−1"],a:2},
+{t:"T",q:"Which array disadvantage occurs when you declare an array of 50 elements but only use 10?",
+ o:["Fixed-size overflow","Memory wastage — the other 40 slots cannot be used by other variables","Slow direct access","Index-out-of-bounds error"],a:1},
+{t:"T",q:"When inserting into a <strong>sorted array</strong>, what operation is required on existing elements?",
+ o:["Reconnecting pointers","Shifting elements to make room","Rebuilding the entire array","Resizing the array first"],a:1},
+{t:"T",q:"Which type of linked list has BOTH <em>next</em> and <em>prev</em> pointers in each node AND the last node's next points back to the first node?",
+ o:["Singly linked list","Doubly linked list","Circular linked list","Doubly circular linked list"],a:3},
+{t:"T",q:"Backtracking (moving backward) in a <strong>singly linked list</strong> is:",
+ o:["Easy using the single pointer","Difficult compared to arrays","Impossible in all cases","The same speed as in arrays"],a:1},
+
+// ── TRACING (35) ─────────────────────────────────────────────────────
+{t:"TR",q:"Linked list: head→[10|next]→[20|next]→[30|null]. Execute: <code>temp=head; temp=temp.next; temp=temp.next</code>. What is <strong>temp.data</strong>?",
+ o:["10","20","30","null"],a:2},
+{t:"TR",q:"Traversal pseudocode on list head→[5]→[10]→[15]→null:<pre class='q-code'>temp = head\nWhile (temp != null)\n   Print(temp.data)\n   temp = temp.next</pre>What value is printed <strong>last</strong>?",
+ o:["5","10","15","null"],a:2},
+{t:"TR",q:"Insertion at top: list is head→[48]→[17]→[142]→null. New node has data=99.<pre class='q-code'>new.next = head\nhead = new</pre>After execution, what is <strong>head.data</strong>?",
+ o:["48","17","99","142"],a:2},
+{t:"TR",q:"Execute this traversal on list head→[6]→[4]→[17]→[42]→null:<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   Last = temp\n   temp = temp.next</pre>What is <strong>temp.data</strong> when the loop exits?",
+ o:["6","17","42","4"],a:2},
+{t:"TR",q:"Using the same traversal as the previous question on head→[6]→[4]→[17]→[42]→null, what is <strong>Last.data</strong> when the loop exits?",
+ o:["17","42","4","6"],a:0},
+{t:"TR",q:"List: head→[A]→[B]→[C]→null. Execute: <code>head = head.next</code>. What is the new <strong>head.data</strong>?",
+ o:["A","B","C","null"],a:1},
+{t:"TR",q:"Delete from top of list head→[6]→[4]→[17]→[42]→null:<pre class='q-code'>temp = head\nhead = temp.next\nfree(temp)</pre>What is the new <strong>head.data</strong>?",
+ o:["6","4","17","42"],a:1},
+{t:"TR",q:"Insert in the middle: list head→[48]→[17]→[142]→null. temp points to node 17. New node data=93.<pre class='q-code'>new.next = temp.next\ntemp.next = new</pre>After execution, node 17's next points to data:",
+ o:["48","142","93","null"],a:2},
+{t:"TR",q:"After the insertion in the previous question (inserting 93 between 17 and 142), node <strong>93</strong>'s next pointer points to data:",
+ o:["17","48","null","142"],a:3},
+{t:"TR",q:"Traversal of list [10]→[20]→[30]→[40]→null using <code>while(temp!=null)</code>. How many times does the while condition evaluate to <strong>TRUE</strong>?",
+ o:["3","4","5","2"],a:1},
+{t:"TR",q:"Array: <code>int[]scores = new int[10]</code>. Using 0-based indexing, valid indices range from:",
+ o:["1 to 10","0 to 9","0 to 10","1 to 9"],a:1},
+{t:"TR",q:"List: head→[5]→[10]→[15]→null. Execute: <code>new.data=1; new.next=head; head=new</code>. After insertion, what is the order from head?",
+ o:["5,1,10,15","1,5,10,15","5,10,15,1","10,5,1,15"],a:1},
+{t:"TR",q:"Delete from end with list head→[6]→[4]→[17]→null. After loop exits, execute: <code>last.next=null; free(temp)</code>. What does node 4's next pointer now point to?",
+ o:["17","null","6","4"],a:1},
+{t:"TR",q:"Insert in middle: temp points to node 17 in head→[48]→[17]→[142]→null. Execute: <code>new.next=temp.next; temp.next=new</code> (new.data=93). What is head.next.next.data?",
+ o:["17","93","142","48"],a:1},
+{t:"TR",q:"Array scores (0-indexed): [79, 87, 94, 82, 67, 98, 87, 81, 74, 91]. What is <strong>scores[5]</strong>?",
+ o:["67","98","87","82"],a:1},
+{t:"TR",q:"Delete from top twice on list head→[10]→[20]→[30]→null. After both deletions, what is <strong>head.data</strong>?",
+ o:["10","20","30","null"],a:2},
+{t:"TR",q:"Insertion at end into list head→[1]→[2]→[3]→null (inserting data=4).<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   temp = temp.next\ntemp.next = new\nnew.next = null</pre>How many times does the while loop body execute?",
+ o:["1","2","3","4"],a:1},
+{t:"TR",q:"Traversal of head→[3]→[1]→[4]→[1]→[5]→null, printing each node. What is the <strong>3rd value</strong> printed?",
+ o:["3","1","4","5"],a:2},
+{t:"TR",q:"Delete from end of list head→[10]→[20]→null. After the delete-end pseudocode runs, what is <strong>Last.data</strong>?",
+ o:["10","20","null","30"],a:0},
+{t:"TR",q:"After deleting the last node from head→[10]→[20]→null (previous question), what does node 10's next pointer point to?",
+ o:["20","null","10","head"],a:1},
+{t:"TR",q:"List head→[5]→[10]→[15]→[20]→null. Traversal runs: temp=head; while(temp!=null){print; temp=temp.next}. How many times is <code>temp=temp.next</code> executed?",
+ o:["3","4","5","2"],a:1},
+{t:"TR",q:"Insert at top with data=50 onto head→[100]→[200]→null. Execute: new.data=50; new.next=head; head=new. What does new.next.data equal?",
+ o:["null","50","100","200"],a:2},
+{t:"TR",q:"Singly linked list: node at 4800 has data=10 (next=4900), node at 4900 has data=15 (next=5000), node at 5000 has data=5 (next=null). head=4800. Reading from head, the sequence is:",
+ o:["5, 15, 10","10, 5, 15","10, 15, 5","15, 10, 5"],a:2},
+{t:"TR",q:"Delete from middle: list head→[1]→[2]→[3]→[4]→null. Delete node 3. prev points to node 2, temp points to node 3. Execute: <code>prev.next = temp.next</code>. Node 2's next now points to data:",
+ o:["3","null","4","1"],a:2},
+{t:"TR",q:"Array A (1-indexed): A = [2, 7, 4, 1, 5, 6]. What is <strong>A[3]</strong>?",
+ o:["2","7","4","1"],a:2},
+{t:"TR",q:"List head→[A]→[B]→[C]→[D]→null. How many <strong>non-null next pointers</strong> exist in this list?",
+ o:["3","4","5","2"],a:1},
+{t:"TR",q:"Insert at end into a <strong>single-node</strong> list: head→[10]→null. Insert data=20. In the traversal <code>while(temp.next!=null)</code>, how many iterations run before exiting?",
+ o:["0","1","2","3"],a:0},
+{t:"TR",q:"Doubly linked list: null←[5]↔[7]↔[9]→null (tail=9). Starting from <strong>tail</strong> and following prev pointers, the sequence is:",
+ o:["5, 7, 9","9, 5, 7","9, 7, 5","7, 5, 9"],a:2},
+{t:"TR",q:"Circular list traversal with do-while: head→[1]→[2]→[3]→(back to 1).<pre class='q-code'>temp = head\ndo {\n   Print(temp.data)\n   temp = temp.next\n} while (temp != head)</pre>Output is:",
+ o:["1  2  3","2  3  1","1  2  3  1","3  2  1"],a:0},
+{t:"TR",q:"List: head→[X]→null. First insert at top: data=Y → Y,X. Then insert at top: data=Z → Z,Y,X. Final order from head?",
+ o:["X, Y, Z","Z, Y, X","Y, Z, X","Z, X, Y"],a:1},
+{t:"TR",q:"List head→[3]→[1]→[4]→[1]→[5]→null. Count nodes:<pre class='q-code'>temp=head; count=0\nWhile(temp!=null)\n   count++\n   temp=temp.next\nPrint(count)</pre>Output:",
+ o:["3","4","5","0"],a:2},
+{t:"TR",q:"Delete from middle of head→[4]→[17]→[42]→null (delete 17). Pseudocode: <code>prev.next=temp.next; free(temp)</code>. After deletion, what is head.next.data?",
+ o:["17","null","42","4"],a:2},
+{t:"TR",q:"List head→[1]→[2]→[3]→[4]→[5]→null. Traverse:<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   temp = temp.next\nPrint(temp.data)</pre>Output:",
+ o:["1","3","5","4"],a:2},
+{t:"TR",q:"Circular list: head→[10]→[20]→[30]→(back to head). Starting at head, after <strong>3</strong> moves of <code>temp=temp.next</code>, temp.data = ?",
+ o:["20","30","10","null"],a:2},
+{t:"TR",q:"List: head→[A]→[B]→[C]→null. Execute:<pre class='q-code'>temp = head\nWhile (temp != null)\n   prev = temp\n   temp = temp.next</pre>After the loop exits, what is <strong>prev.data</strong> and what is <strong>temp</strong>?",
+ o:["prev=B, temp=C","prev=C, temp=null","prev=null, temp=A","prev=A, temp=null"],a:1},
+
+// ── CHOOSE CORRECT CODE (25) ─────────────────────────────────────────
+{t:"C",q:"Which pseudocode correctly traverses a singly linked list and <strong>visits all nodes</strong> including the last?",
+ o:["temp=head; while(temp!=null){ print(temp.data); temp=temp.next }",
+    "temp=head; while(temp.next!=null){ print(temp.data); temp=temp.next }",
+    "temp=head; while(temp!=head){ print(temp.data); temp=temp.next }",
+    "temp=null; while(temp!=head){ print(temp.data); temp=temp.next }"],a:0},
+{t:"C",q:"Which pseudocode correctly inserts a new node at the <strong>TOP</strong> of a linked list?",
+ o:["head=new; new.next=head",
+    "new.next=head; head=new",
+    "head=new; new.next=null",
+    "new.next=null; head=new"],a:1},
+{t:"C",q:"Which pseudocode correctly deletes the <strong>first node</strong> of a linked list?",
+ o:["free(head); head=head.next",
+    "temp=head; head=temp.next; free(temp)",
+    "temp=head.next; free(head)",
+    "head=null; free(head)"],a:1},
+{t:"C",q:"To traverse and reach the <strong>LAST node</strong> (for end-deletion or end-insertion), the correct loop condition is:",
+ o:["while(temp != null)","while(temp.next != null)","while(temp.data != null)","while(temp != head)"],a:1},
+{t:"C",q:"Which correctly inserts a new node at the <strong>END</strong> of a linked list?",
+ o:["temp=head; while(temp!=null){temp=temp.next}; temp=new; new.next=null",
+    "temp=head; while(temp.next!=null){temp=temp.next}; temp.next=new; new.next=null",
+    "temp=head; while(temp.next!=null){temp=temp.next}; temp=new",
+    "temp=head; while(temp!=null){temp=temp.next}; temp.next=new"],a:1},
+{t:"C",q:"For deletion from the <strong>middle</strong>, which order of operations is correct?",
+ o:["free(temp); prev.next=temp.next",
+    "prev.next=temp.next; free(temp)",
+    "temp.next=null; free(temp)",
+    "prev=temp.next; free(temp)"],a:1},
+{t:"C",q:"Which correctly creates the <strong>first node</strong> in an initially empty linked list?",
+ o:["head=null; new.data=x; head=new",
+    "new.data=x; new.next=null; head=new",
+    "head=new; new.data=x; new.next=head",
+    "new=head; head.data=x"],a:1},
+{t:"C",q:"To insert a new node <strong>between</strong> node A (temp) and node B (temp.next), which is correct?",
+ o:["new.next=temp; temp.next=new",
+    "temp.next=new; new.next=temp.next",
+    "new.next=temp.next; temp.next=new",
+    "new.next=temp; temp=new"],a:2},
+{t:"C",q:"In a <strong>circular linked list</strong>, which condition correctly signals that traversal is complete?",
+ o:["temp == null","temp.next == null","temp.next == head","temp == tail"],a:2},
+{t:"C",q:"To delete from the <strong>END</strong>, after the loop finds last node (temp) and second-to-last (Last), the correct operation is:",
+ o:["Last = null; free(temp)","Last.next = null; free(temp)","temp.next = null; free(Last)","Last.next = temp; free(temp)"],a:1},
+{t:"C",q:"Before traversing a linked list, which check should be performed to safely handle an empty list?",
+ o:["if(head.data == null) return","if(head.next == null) return","if(head == null) return","if(head == 0) return"],a:2},
+{t:"C",q:"In insertion at the middle, the traversal loop must stop at the node <em>before</em> the insertion point. Which condition achieves this for inserting after a specific node?",
+ o:["while(temp != target)","while(temp.next != target)","while(temp.data != target)","while(temp.next.data != target)"],a:3},
+{t:"C",q:"Which correctly implements <strong>deletion from the TOP</strong> in the safe order that prevents losing the head reference?",
+ o:["head=head.next; free(head)",
+    "free(head); head=head.next",
+    "temp=head; head=temp.next; free(temp)",
+    "temp=head.next; head=temp; free(head)"],a:2},
+{t:"C",q:"When inserting a new node into an <strong>empty list</strong>, new.next should be set to:",
+ o:["head","null","new (itself)","tail"],a:1},
+{t:"C",q:"Which traversal loop would <strong>MISS</strong> the last node in a singly linked list?",
+ o:["while(temp != null){ process; temp=temp.next }",
+    "while(temp.next != null){ process; temp=temp.next }",
+    "for each node from head while not null",
+    "do{ process; temp=temp.next }while(temp!=null)"],a:1},
+{t:"C",q:"In a <strong>doubly linked list</strong>, to traverse backward from tail to head:",
+ o:["temp=head; while(temp!=null){ print; temp=temp.prev }",
+    "temp=tail; while(temp!=null){ print; temp=temp.prev }",
+    "temp=tail; while(temp!=null){ print; temp=temp.next }",
+    "temp=tail.prev; while(temp!=null){ print; temp=temp.prev }"],a:1},
+{t:"C",q:"Which pseudocode segment for <strong>delete from end</strong> is in the correct order?",
+ o:["last.next=null; free(temp) — where Last is second-to-last and temp is last",
+    "free(temp); last.next=null",
+    "last=null; free(temp)",
+    "temp.next=null; free(last)"],a:0},
+{t:"C",q:"Accessing the <strong>3rd element</strong> in a linked list from head (1-indexed) using pointer traversal:",
+ o:["head.data[3]","head.next.next.data","head[2].data","A[3] — same as array"],a:1},
+{t:"C",q:"Which correctly states why <code>free(head); head = head.next</code> is a <strong>bug</strong>?",
+ o:["head should be freed after head=head.next","head.next should be freed first","This is correct code — no bug","free() is not needed for linked lists"],a:0},
+{t:"C",q:"To correctly insert in the <strong>middle</strong>, which statement must execute FIRST?",
+ o:["temp.next = new","new.next = temp.next","new = temp.next","head = new"],a:1},
+{t:"C",q:"In deletion from the <strong>middle</strong>, which step is crucial to prevent a memory leak?",
+ o:["Setting prev.next = temp.next","Calling free(temp) after reconnecting pointers","Setting temp.next = null","Setting temp = null"],a:1},
+{t:"C",q:"Which pseudocode correctly counts the nodes in a linked list?",
+ o:["count=0; temp=head; while(temp!=null){ count++; temp=temp.next }",
+    "count=1; temp=head; while(temp!=null){ count++; temp=temp.next }",
+    "count=0; temp=head; while(temp.next!=null){ count++; temp=temp.next }",
+    "count=0; while(head!=null){ count++ }"],a:0},
+{t:"C",q:"The correct pseudocode for <strong>Insert at Top</strong> with steps labeled is:",
+ o:["Step1: head=new. Step2: new.next=head. Step3: reconnect",
+    "Step1: new.next=head. Step2: head=new",
+    "Step1: new=head. Step2: new.next=null",
+    "Step1: head=new. Step2: new.data=x"],a:1},
+{t:"C",q:"When inserting a node between two nodes in a singly linked list, how many pointer assignments are needed?",
+ o:["1 (only new.next)","2 (new.next and temp.next)","3 (create, link forward, link back)","4 (two for each direction)"],a:1},
+{t:"C",q:"For a linked list, direct array-style access like <code>list[5]</code> is:",
+ o:["Possible and O(1) efficient","Not possible — must traverse sequentially from head","Possible only for circular lists","Possible only with a tail pointer"],a:1},
+
+// ── TRICKY TRACING (25) ──────────────────────────────────────────────
+{t:"TT",q:"List: head→[1]→[2]→[3]→[4]→null. Execute:<pre class='q-code'>temp = head\nWhile (temp.next.next != null)\n   temp = temp.next\nPrint(temp.data)</pre>What is printed?",
+ o:["2","3","4","1"],a:1},
+{t:"TT",q:"List head→[10]→[20]→[30]→null. Delete from end <strong>twice</strong> (running the delete-end algorithm two times). After both deletions, what does the list contain?",
+ o:["head→[10]→null","head→null (empty)","head→[20]→null","head→[30]→null"],a:0},
+{t:"TT",q:"Execute on list head→[5]→[10]→[15]→null:<pre class='q-code'>new.data = 7\nnew.next = head.next\nhead.next = new</pre>What is <strong>head.next.next.data</strong>?",
+ o:["5","7","10","15"],a:2},
+{t:"TT",q:"A linked list has 100 nodes. To access the <strong>99th node</strong> from head (node 1), how many <code>temp=temp.next</code> operations are needed?",
+ o:["98","99","100","1"],a:0},
+{t:"TT",q:"Circular list: head→[A]→[B]→[C]→(back to A). Execute: temp=head; temp=temp.next; temp=temp.next; temp=temp.next. What is <strong>temp.data</strong>?",
+ o:["A","B","C","null"],a:0},
+{t:"TT",q:"What is the <strong>critical error</strong> in this deletion code?<pre class='q-code'>free(head)\nhead = head.next</pre>",
+ o:["head.next is freed instead of head",
+    "After free(head), head is invalid — head.next cannot be accessed",
+    "No error — this is correct",
+    "free() should not be used"],a:1},
+{t:"TT",q:"List: head→[1]→[2]→[3]→null. Insert at top three times: data=4, then data=5, then data=6. Final order from head?",
+ o:["1,2,3,4,5,6","6,5,4,1,2,3","4,5,6,1,2,3","6,4,5,1,2,3"],a:1},
+{t:"TT",q:"Doubly linked list: null←[A]↔[B]↔[C]→null. Execute: <code>B.prev.next = B.next; B.next.prev = B.prev; free(B)</code>. What is the resulting list?",
+ o:["null←[A]↔[C]→null","null←[A]→null and null←[C]→null (disconnected)","List unchanged","A points to null"],a:0},
+{t:"TT",q:"Array A=[1,2,3,4,5] (0-indexed, size=5). Currently has 4 elements: [1,2,3,4,_]. Insert value=0 at <strong>position 0</strong> (0-indexed). How many elements must shift right?",
+ o:["1","2","3","4"],a:3},
+{t:"TT",q:"List: head→[10]→[20]→[30]→null. Execute:<pre class='q-code'>temp = head.next\nhead.next = temp.next\nfree(temp)</pre>What is the resulting list?",
+ o:["head→[10]→[30]→null","head→[20]→[30]→null","head→[10]→[20]→null","head→[30]→null"],a:0},
+{t:"TT",q:"Linked list: head→[A]→[B]→[C]→[D]→[E]→null. We forcefully set: <code>head.next.next = null</code> (i.e., B.next = null). Starting from head, how many nodes are now <strong>accessible</strong>?",
+ o:["5","3","2","4"],a:2},
+{t:"TT",q:"What is the <strong>time complexity</strong> of inserting a node at the <strong>BEGINNING</strong> of a linked list (regardless of list size)?",
+ o:["O(N)","O(N²)","O(log N)","O(1)"],a:3},
+{t:"TT",q:"What is the time complexity of inserting at the <strong>END</strong> of a singly linked list <em>without</em> a tail pointer?",
+ o:["O(1)","O(log N)","O(N)","O(N²)"],a:2},
+{t:"TT",q:"After: <code>temp=head; head=null; Print(temp.data)</code> on list head→[42]→[10]→null, what is printed?",
+ o:["null","42","10","Error — temp is null"],a:1},
+{t:"TT",q:"Circular list: head→[10]→[20]→[30]→(back to head). Starting at head, how many <code>temp=temp.next</code> operations are needed to return to head?",
+ o:["2","3","4","1"],a:1},
+{t:"TT",q:"After deleting the <strong>first</strong> and <strong>last</strong> nodes from head→[5]→[10]→[15]→[20]→null (in that order), what is the resulting list?",
+ o:["head→[10]→[15]→null","head→[5]→[20]→null","head→[15]→null","head→[10]→[20]→null"],a:0},
+{t:"TT",q:"List head→[5]→[10]→[15]→null. Execute insertion: <code>new.data=7; new.next=head; head=new</code>. Then immediately delete from top: <code>temp=head; head=temp.next; free(temp)</code>. What is the <strong>final list</strong>?",
+ o:["head→[7]→[5]→[10]→[15]→null","head→[5]→[10]→[15]→null","head→[10]→[15]→null","head→[7]→[10]→[15]→null"],a:1},
+{t:"TT",q:"In this code, if the list is <strong>empty</strong> (head=null), what happens when executed?<pre class='q-code'>temp = head\nnew.next = temp.next\ntemp.next = new</pre>",
+ o:["Inserts correctly at the front","temp is null — temp.next causes a null pointer error","new.next = null (valid — empty list handled)","head becomes new"],a:1},
+{t:"TT",q:"Array A=[10,20,30,40,50] (0-indexed). Delete element at index 2 by shifting elements left. What is <strong>A[3]</strong> after deletion?",
+ o:["30","40","50","0"],a:2},
+{t:"TT",q:"List: head→[1]→[2]→[3]→[4]→[5]→null. Count how many nodes have an <em>even</em> data value:<pre class='q-code'>temp=head; count=0\nWhile(temp!=null)\n   if(temp.data % 2 == 0) count++\n   temp=temp.next\nPrint(count)</pre>",
+ o:["1","2","3","4"],a:1},
+{t:"TT",q:"How many pointer assignments are needed to <strong>completely remove</strong> node B from a <em>doubly</em> linked list A↔B↔C?",
+ o:["1 (just A.next=C)","2 (A.next=C and C.prev=A)","3 (A.next=C, C.prev=A, free(B))","4 (set all pointers to null first)"],a:1},
+{t:"TT",q:"List: head→[10]→[20]→[30]→[40]→null. Execute insert at middle (after node 20): new.data=25; new.next=temp.next; temp.next=new (temp points to node 20). Then immediately traverse and print all. What is printed at <strong>position 4</strong>?",
+ o:["20","25","30","40"],a:2},
+{t:"TT",q:"In a singly linked list of N nodes, what is the time complexity of <strong>searching</strong> for a specific value (worst case)?",
+ o:["O(1)","O(log N)","O(N)","O(N²)"],a:2},
+{t:"TT",q:"A singly linked list currently has: head→[A]→[B]→null. After executing: <code>B.next=head</code>, what type of structure is created?",
+ o:["A doubly linked list","A circular linked list","A doubly circular linked list","An array-like structure"],a:1},
+{t:"TT",q:"Which scenario would cause an <strong>infinite loop</strong> during traversal with <code>while(temp!=null)</code>?",
+ o:["An empty list (head=null)",
+    "A circular linked list where the last node points back to head",
+    "A list with only one node",
+    "A list where all node data values are the same"],a:1},
+];
+
+let cur=0, answers=new Array(Q.length).fill(-1), score=0;
+const TYPE={
+  T:{label:"Theoretical",cls:"badge-T"},
+  TR:{label:"Tracing",cls:"badge-TR"},
+  C:{label:"Choose Code",cls:"badge-C"},
+  TT:{label:"Tricky Trace",cls:"badge-TT"},
 };
-const TOTAL_Q = 50;
-let score = 0;
-let answered = 0;
-const userAnswers = {};
 
-function updateScorebar(){
-  document.getElementById('score').textContent = score;
-  document.getElementById('answered').textContent = answered;
-  document.getElementById('answeredCount').textContent = answered;
-}
-
-document.querySelectorAll('input[type="radio"]').forEach(radio => {
-  radio.addEventListener('change', function(){
-    const name = this.name;
-    const qNum = parseInt(name.replace('q',''));
-    if(userAnswers[qNum]) return;
-
-    const chosen = this.value;
-    const correct = ANSWERS[qNum];
-    userAnswers[qNum] = chosen === correct ? 'correct' : 'wrong';
-    answered++;
-    if(chosen === correct) score++;
-
-    const card = document.getElementById('qc' + qNum);
-    card.classList.add(chosen === correct ? 'correct' : 'wrong');
-
-    document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
-      const lbl = inp.parentElement;
-      if(inp.value === chosen && chosen === correct) lbl.classList.add('selected-correct');
-      else if(inp.value === chosen && chosen !== correct) lbl.classList.add('selected-wrong');
-      if(inp.value === correct && chosen !== correct) lbl.classList.add('reveal-correct');
-      inp.disabled = true;
-    });
-
-    const fb = document.getElementById('fb' + qNum);
-    if(chosen === correct){
-      fb.textContent = '✅ Correct!';
-      fb.className = 'feedback correct';
-    } else {
-      fb.textContent = `❌ Wrong. Correct answer: ${correct}`;
-      fb.className = 'feedback wrong';
+function render(){
+  const qz=document.getElementById('quiz');
+  qz.style.display='block';
+  document.getElementById('results').style.display='none';
+  const q=Q[cur], answered=answers[cur]!==-1, userAns=answers[cur];
+  const tc=TYPE[q.t];
+  document.getElementById('prog').style.width=((cur+1)/Q.length*100)+'%';
+  document.getElementById('counter').textContent=`${cur+1} / ${Q.length}`;
+  document.getElementById('scoreDisplay').textContent=score;
+  const letters=['A','B','C','D'];
+  let optsHtml='';
+  q.o.forEach((opt,i)=>{
+    let cls='opt'+(answered?' disabled':'');
+    if(answered){
+      if(i===q.a) cls+=' correct';
+      else if(i===userAns&&userAns!==q.a) cls+=' wrong';
     }
-
-    updateScorebar();
+    const hasCode=opt.includes('\n')||opt.startsWith('temp=')||opt.startsWith('new.')||
+                  opt.startsWith('head=')||opt.startsWith('free(')||opt.startsWith('while(')||
+                  opt.startsWith('Step')||opt.includes('=head')||opt.includes('.next');
+    const content=hasCode?`<span class="opt-code">${opt}</span>`:opt;
+    optsHtml+=`<button class="${cls}" onclick="pick(${i})"><span class="opt-letter">${letters[i]}</span>${content}</button>`;
   });
-});
-
-function resetQuiz(){
-  document.querySelectorAll('input[type="radio"]').forEach(r => {
-    r.checked = false;
-    r.disabled = false;
-    r.parentElement.className = 'option-label';
-  });
-  document.querySelectorAll('.question-card').forEach(c => {
-    c.classList.remove('correct','wrong');
-  });
-  document.querySelectorAll('.feedback').forEach(f => { f.textContent=''; f.className='feedback'; });
-  Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
-  score = 0; answered = 0;
-  updateScorebar();
-  window.scrollTo(0,0);
+  const feedHtml=answered?`<div class="feedback ${userAns===q.a?'correct':'wrong'}" style="display:block">
+    ${userAns===q.a?'✓ Correct!':`✗ Incorrect. Correct answer: <strong>${letters[q.a]}. ${q.o[q.a]}</strong>`}
+  </div>`:`<div class="feedback"></div>`;
+  qz.innerHTML=`<div class="q-card">
+    <div class="q-meta"><span class="q-num">Q ${cur+1} of ${Q.length}</span>
+    <span class="badge ${tc.cls}">${tc.label}</span></div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${optsHtml}</div>${feedHtml}
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="prev()" ${cur===0?'disabled':''}>← Previous</button>
+      ${cur===Q.length-1
+        ?`<button class="btn btn-primary" onclick="showResults()" ${!answered?'disabled':''}>View Results →</button>`
+        :`<button class="btn btn-primary" onclick="next()" ${!answered?'disabled':''}>Next →</button>`}
+    </div></div>`;
 }
 
-updateScorebar();
+function pick(idx){
+  if(answers[cur]!==-1) return;
+  answers[cur]=idx;
+  if(idx===Q[cur].a) score++;
+  document.getElementById('scoreDisplay').textContent=score;
+  render();
+}
+function next(){if(cur<Q.length-1){cur++;render();}}
+function prev(){if(cur>0){cur--;render();}}
+
+function showResults(){
+  document.getElementById('quiz').style.display='none';
+  const r=document.getElementById('results');
+  r.style.display='block';
+  const pct=Math.round(score/Q.length*100);
+  document.getElementById('resPct').textContent=pct+'%';
+  document.getElementById('resScore').textContent=`${score} / ${Q.length} correct`;
+  let grade,msg,color;
+  if(pct>=90){grade='A+';msg='Outstanding! Fully exam-ready.';color='#22d46b'}
+  else if(pct>=80){grade='A';msg='Excellent work!';color='#22d46b'}
+  else if(pct>=70){grade='B';msg='Good — review the tricky ones.';color='#00c3ff'}
+  else if(pct>=60){grade='C';msg='Above average — more practice needed.';color='#f0c040'}
+  else if(pct>=50){grade='D';msg='Needs significant practice.';color='#ff7043'}
+  else{grade='F';msg='Go back and review Chapter 2!';color='#ff4e4e'}
+  const gradeEl=document.getElementById('resGrade');
+  gradeEl.textContent=grade; gradeEl.style.color=color;
+  document.getElementById('resMsg').textContent=msg;
+  const arc=document.getElementById('arcFill');
+  arc.style.stroke=color;
+  const circ=427.26;
+  setTimeout(()=>{arc.style.strokeDashoffset=circ-(pct/100*circ);},100);
+  const cats={T:{n:'Theoretical',c:'#34d399',tot:0,cor:0},
+              TR:{n:'Tracing',c:'#fb923c',tot:0,cor:0},
+              C:{n:'Choose Code',c:'#818cf8',tot:0,cor:0},
+              TT:{n:'Tricky Trace',c:'#f472b6',tot:0,cor:0}};
+  Q.forEach((q,i)=>{cats[q.t].tot++;if(answers[i]===q.a)cats[q.t].cor++;});
+  let bd='';
+  Object.values(cats).forEach(c=>{
+    if(!c.tot) return;
+    const p=Math.round(c.cor/c.tot*100);
+    bd+=`<div class="cat-row">
+      <span class="cat-name" style="color:${c.c}">${c.n}</span>
+      <div class="cat-bar-wrap"><div class="cat-bar-fill" style="background:${c.c};width:0%" data-w="${p}%"></div></div>
+      <span class="cat-score">${c.cor}/${c.tot}</span></div>`;
+  });
+  document.getElementById('catBreakdown').innerHTML=bd;
+  setTimeout(()=>{document.querySelectorAll('.cat-bar-fill').forEach(b=>b.style.width=b.dataset.w);},200);
+}
+
+function restart(){
+  cur=0;answers=new Array(Q.length).fill(-1);score=0;
+  document.getElementById('results').style.display='none';
+  render();
+}
+render();
 </script>
 </body>
 </html>
