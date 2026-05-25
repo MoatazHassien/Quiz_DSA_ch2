@@ -25,19 +25,28 @@ header{
   position:sticky;top:0;z-index:100;
   background:rgba(6,10,16,.92);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
-  padding:14px 28px;display:flex;align-items:center;gap:20px;
+  padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
 }
 .hdr-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
   color:var(--accent);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
 .hdr-counter{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
   margin-left:auto;white-space:nowrap;}
-.progress-wrap{flex:1;max-width:500px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-wrap{flex:1;max-width:500px;min-width:120px;height:4px;background:var(--border);border-radius:4px;overflow:hidden}
 .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--t-color));
   border-radius:4px;transition:width .4s ease;width:0%}
-.score-pill{display:flex;align-items:center;gap:8px;background:var(--surface);
-  border:1px solid var(--border);border-radius:50px;padding:6px 16px;
+
+.scores-wrap{display:flex;align-items:center;gap:10px;}
+.score-pill{display:flex;align-items:center;gap:6px;background:var(--surface);
+  border:1px solid var(--border);border-radius:50px;padding:6px 14px;
   font-size:13px;color:var(--muted);white-space:nowrap;}
-.score-num{font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace}
+.score-pill.correct-pill{border-color:rgba(34,212,107,.25)}
+.score-pill.wrong-pill{border-color:rgba(255,78,78,.25)}
+.score-num{font-weight:700;font-family:'JetBrains Mono',monospace}
+.score-num.green{color:var(--green)}.score-num.red{color:var(--red)}
+.score-icon{font-size:12px;line-height:1}
+.score-pill.correct-pill .score-icon{color:var(--green)}
+.score-pill.wrong-pill .score-icon{color:var(--red)}
+
 main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
 .q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:32px 36px;animation:slideIn .3s ease;}
@@ -71,10 +80,26 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
 .opt.disabled{cursor:default}
 .opt .opt-code{font-family:'JetBrains Mono',monospace;font-size:12px;display:block;
   margin-top:4px;color:#a5b4fc;white-space:pre;line-height:1.7}
+
 .feedback{border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.5;
-  margin-bottom:22px;display:none;}
+  margin-bottom:12px;display:none;}
 .feedback.correct{background:rgba(34,212,107,.1);border:1px solid rgba(34,212,107,.3);color:#7de8a8}
 .feedback.wrong{background:rgba(255,78,78,.1);border:1px solid rgba(255,78,78,.3);color:#ff9090}
+
+.explanation{
+  background:rgba(192,132,252,.06);border:1px solid rgba(192,132,252,.2);
+  border-left:4px solid var(--accent);border-radius:8px;
+  padding:16px 20px;margin-bottom:22px;font-size:14px;line-height:1.8;
+  color:#c8dfe8;text-align:right;direction:rtl;
+}
+.explanation strong, .explanation b{color:var(--accent);font-weight:600;}
+.explanation code{
+  font-family:'JetBrains Mono',monospace;background:rgba(0,0,0,.3);
+  padding:2px 6px;border-radius:4px;font-size:12px;color:#c4b5fd;
+  direction:ltr;display:inline-block;
+}
+.explanation .ex-title{font-weight:700;color:var(--text);margin-bottom:6px;display:block;font-size:13px;letter-spacing:1px;}
+
 .nav{display:flex;justify-content:space-between;align-items:center}
 .btn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
   padding:11px 26px;border-radius:8px;cursor:pointer;border:1.5px solid;transition:var(--transition);}
@@ -83,6 +108,7 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:#060a10}
 .btn-primary:hover{filter:brightness(1.1)}
 .btn-primary:disabled,.btn:disabled{opacity:.35;cursor:not-allowed;filter:none}
+
 #results{display:none;animation:slideIn .4s ease}
 .res-hero{text-align:center;padding:48px 0 36px}
 .res-arc{position:relative;width:160px;height:160px;margin:0 auto 24px}
@@ -96,6 +122,17 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
 .res-grade{font-size:48px;font-weight:700;margin-bottom:6px}
 .res-msg{font-size:16px;color:var(--muted);margin-bottom:6px}
 .res-score{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent)}
+
+.res-score-cards{display:flex;justify-content:center;gap:16px;margin:20px auto 0;max-width:420px;}
+.res-score-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;}
+.res-score-card.correct-card{border-color:rgba(34,212,107,.25)}
+.res-score-card.wrong-card{border-color:rgba(255,78,78,.25)}
+.res-score-card.unanswered-card{border-color:rgba(90,116,144,.25)}
+.res-card-icon{font-size:20px;margin-bottom:6px}
+.res-card-num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;line-height:1.2}
+.res-card-num.green{color:var(--green)}.res-card-num.red{color:var(--red)}.res-card-num.muted{color:var(--muted)}
+.res-card-label{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.5px}
+
 .breakdown{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:24px 28px;margin-bottom:24px;}
 .breakdown h3{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
@@ -104,11 +141,55 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
 .cat-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .cat-bar-fill{height:100%;border-radius:3px;transition:width 1s ease}
 .cat-score{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);min-width:55px;text-align:right}
+.res-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:16px;}
 .btn-restart{display:block;margin:0 auto;font-family:'JetBrains Mono',monospace;
   font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
   padding:14px 36px;background:transparent;border:1.5px solid var(--accent);
   color:var(--accent);border-radius:8px;cursor:pointer;transition:var(--transition);}
 .btn-restart:hover{background:var(--accent);color:#060a10}
+.btn-print{display:block;font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:14px 36px;background:transparent;border:1.5px solid var(--muted);
+  color:var(--muted);border-radius:8px;cursor:pointer;transition:var(--transition);}
+.btn-print:hover{background:var(--muted);color:var(--bg)}
+
+@media(max-width:640px){
+  header{padding:10px 14px;gap:10px}.hdr-title{font-size:11px}
+  .scores-wrap{order:10;width:100%;justify-content:center}
+  .q-card{padding:22px 18px}.q-text{font-size:17px}
+  .res-score-cards{flex-direction:column;max-width:200px}
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; background-image: none !important; }
+  * { box-shadow: none !important; animation: none !important; transition: none !important; }
+  header { position: relative !important; background: #fff !important; border-bottom: 2px solid #000 !important; backdrop-filter: none !important; }
+  .hdr-title, .hdr-counter { color: #000 !important; }
+  .progress-wrap, .scores-wrap { display: none !important; }
+  main { padding: 20px 0 !important; }
+  .q-card, .breakdown, .res-score-card { background: #fff !important; border: 1px solid #ddd !important; break-inside: avoid; }
+  .q-text { color: #000 !important; }
+  .q-code { background: #f4f4f4 !important; color: #000 !important; border-left: 3px solid #000 !important; }
+  .badge { border-color: #666 !important; color: #333 !important; background: #eee !important; }
+  .opt { background: #fff !important; border: 1px solid #999 !important; color: #000 !important; }
+  .opt.disabled { opacity: 1 !important; }
+  .opt.correct { border-color: #000 !important; background: #f0f0f0 !important; font-weight: bold !important; }
+  .opt.wrong { border-color: #999 !important; background: #fff !important; text-decoration: line-through !important; }
+  .opt-letter { color: #000 !important; }
+  .feedback { background: #f9f9f9 !important; border: 1px solid #ccc !important; color: #000 !important; }
+  .nav, .btn-restart, .btn-print { display: none !important; }
+  .arc-bg { stroke: #ddd !important; }
+  .arc-fill { stroke: #000 !important; }
+  .res-pct-num, .res-grade, .res-score { color: #000 !important; }
+  .res-msg, .res-card-label, .res-pct-label, .cat-name, .cat-score { color: #333 !important; }
+  .res-card-num { color: #000 !important; }
+  .res-score-card { border-color: #ccc !important; }
+  .cat-bar-wrap { background: #eee !important; }
+  .cat-bar-fill { background: #000 !important; }
+  .explanation { background: #f0f4f8 !important; border: 1px solid #ccc !important; border-left: 4px solid #000 !important; color: #000 !important; }
+  .explanation strong, .explanation b { color: #000 !important; }
+  .explanation code { background: #eee !important; color: #000 !important; }
+}
 </style>
 </head>
 <body>
@@ -116,7 +197,10 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
   <div class="hdr-title">CH.2 · Arrays &amp; Linked Lists</div>
   <div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
   <div class="hdr-counter" id="counter">1 / 100</div>
-  <div class="score-pill">Score <span class="score-num" id="scoreDisplay">0</span>/100</div>
+  <div class="scores-wrap">
+    <div class="score-pill correct-pill"><span class="score-icon">✓</span> Correct <span class="score-num green" id="correctDisplay">0</span></div>
+    <div class="score-pill wrong-pill"><span class="score-icon">✗</span> Wrong <span class="score-num red" id="wrongDisplay">0</span></div>
+  </div>
 </header>
 <main>
   <div id="quiz"></div>
@@ -136,277 +220,402 @@ main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
       <div class="res-grade" id="resGrade">—</div>
       <div class="res-msg" id="resMsg"></div>
       <div class="res-score" id="resScore"></div>
+      <div class="res-score-cards">
+        <div class="res-score-card correct-card">
+          <div class="res-card-icon" style="color:var(--green)">✓</div>
+          <div class="res-card-num green" id="resCorrect">0</div>
+          <div class="res-card-label">Correct</div>
+        </div>
+        <div class="res-score-card wrong-card">
+          <div class="res-card-icon" style="color:var(--red)">✗</div>
+          <div class="res-card-num red" id="resWrong">0</div>
+          <div class="res-card-label">Wrong</div>
+        </div>
+        <div class="res-score-card unanswered-card">
+          <div class="res-card-icon" style="color:var(--muted)">—</div>
+          <div class="res-card-num muted" id="resUnanswered">0</div>
+          <div class="res-card-label">Skipped</div>
+        </div>
+      </div>
     </div>
     <div class="breakdown">
       <h3>Category Breakdown</h3>
       <div id="catBreakdown"></div>
     </div>
-    <button class="btn-restart" onclick="restart()">↺ RESTART QUIZ</button>
+    <div class="res-actions">
+      <button class="btn-print" onclick="window.print()">⎙ PRINT RESULTS</button>
+      <button class="btn-restart" onclick="restart()">↺ RESTART QUIZ</button>
+    </div>
   </div>
 </main>
 <script>
 const Q=[
 // ── THEORETICAL (15) ─────────────────────────────────────────────────
 {t:"T",q:"In a singly linked list, each node consists of:",
- o:["Data part only","Address part only","Data part + Address part","Two data parts"],a:2},
+ o:["Data part only","Address part only","Data part + Address part","Two data parts"],a:2,
+ ex:"كل Node في الـ Singly Linked List لازم يحتوي على حتتين: الـ <strong>Data part</strong> اللي بيخزن القيمة، والـ <strong>Address part (Pointer/Next)</strong> اللي بيخزن عنوان الـ Node اللي بعده."},
 {t:"T",q:"The last node in a singly linked list must have which value in its address part?",
- o:["The address of the first node","NULL","Zero (0)","The address of the previous node"],a:1},
+ o:["The address of the first node","NULL","Zero (0)","The address of the previous node"],a:1,
+ ex:"آخر Node في الـ Singly Linked List لازم الـ Address بتاعها يكون <strong>NULL</strong> عشان يبقى ده إشارة إن مفيش Node بعدها (نهاية الـ List)."},
 {t:"T",q:"To keep track of a linked list at all times, you must know:",
- o:["The total size of the list","The pointer to the first element (head)","The last element's data value","The middle element's address"],a:1},
+ o:["The total size of the list","The pointer to the first element (head)","The last element's data value","The middle element's address"],a:1,
+ ex:"عشان تقدر توصل للـ Linked List، لازم تعرف الـ <strong>head</strong> (مؤشر لأول عنصر). لو عرفت الـ head، تقدر توصل لأي عنصر بعده عن طريق الـ Pointers، بس لو فقدته هتفقد الـ List كلها."},
 {t:"T",q:"In a <strong>doubly linked list</strong>, how many NULL pointer values exist in the entire list?",
- o:["One (only at the last node)","Two (one at the first node, one at the last node)","None — all nodes are connected","One at the first node only"],a:1},
+ o:["One (only at the last node)","Two (one at the first node, one at the last node)","None — all nodes are connected","One at the first node only"],a:1,
+ ex:"في الـ Doubly Linked List، أول Node الـ <code>prev</code> بتاعه بيشير لـ NULL، وآخر Node الـ <code>next</code> بتاعه بيشير لـ NULL. يعني إجمالي <strong>قيمتين NULL</strong>."},
 {t:"T",q:"In a <strong>circular linked list</strong>, the last node's address part points to:",
- o:["NULL","The last node itself","The first node (head)","The second node"],a:2},
+ o:["NULL","The last node itself","The first node (head)","The second node"],a:2,
+ ex:"في الـ Circular Linked List، آخر Node مش بيشير لـ NULL زي العادي، بل بيكون الـ Address بتاعه بيشير تاني لأول Node وهو الـ <strong>head</strong>، فبتعمل شكل دائري."},
 {t:"T",q:"How do we know when we have <em>finished traversing</em> a circular linked list?",
- o:["temp == NULL","temp.next == NULL","temp.next == head","temp.data == head.data"],a:2},
+ o:["temp == NULL","temp.next == NULL","temp.next == head","temp.data == head.data"],a:2,
+ ex:"لما بنعدي على الـ Circular List، مش هنوصل لـ NULL. بنعرف إننا خلصنا لما نلاقي إن الـ Node اللي واقفين عندها الـ <code>next</code> بتاعها بيشير للـ <strong>head</strong> تاني."},
 {t:"T",q:"Which type of linked list allows traversal in <strong>both forward and backward</strong> directions?",
- o:["Singly linked list","Circular linked list","Doubly linked list","Singly circular linked list"],a:2},
+ o:["Singly linked list","Circular linked list","Doubly linked list","Singly circular linked list"],a:2,
+ ex:"الـ <strong>Doubly Linked List</strong> هي الوحيدة اللي فيها مؤشرين (<code>next</code> و <code>prev</code>)، واللي بيسمح ليك تتحرك للأمام (forward) وللوراء (backward)."},
 {t:"T",q:"In a doubly linked list, we usually maintain two pointers to track the list. These are named:",
- o:["head and temp","head and tail","first and last","prev and next"],a:1},
+ o:["head and temp","head and tail","first and last","prev and next"],a:1,
+ ex:"عشان نسهل التعامل مع الـ Doubly Linked List، بنحتفظ بمؤشرين أساسيين: <strong>head</strong> يشير لأول عنصر، و <strong>tail</strong> يشير لآخر عنصر."},
 {t:"T",q:"<em>Traversing</em> a linked list is defined as:",
- o:["Deleting each node sequentially","Visiting each node exactly once for a certain purpose","Sorting the nodes in order","Counting only the data values"],a:1},
+ o:["Deleting each node sequentially","Visiting each node exactly once for a certain purpose","Sorting the nodes in order","Counting only the data values"],a:1,
+ ex:"الـ <strong>Traversal</strong> يعني إنك تزور كل Node في الـ List مرة واحدة بالترتيب عشان تعمل عملية معينة (زي الطباعة أو البحث)، من غير ما تمسح أو تغير ترتيبهم."},
 {t:"T",q:"Which of the following is a key <strong>advantage</strong> of a linked list over an array?",
- o:["Provides direct (random) access","Uses less memory per element than arrays","Dynamic size — can grow or shrink during execution","Faster element access time"],a:2},
+ o:["Provides direct (random) access","Uses less memory per element than arrays","Dynamic size — can grow or shrink during execution","Faster element access time"],a:2,
+ ex:"أهم ميزة للـ Linked List على الـ Array هي إن حجمها <strong>Dynamic</strong> (ديناميكي)، يعني ممكن يكبر أو يصغر أثناء تشغيل البرنامج من غير ما نحتاج نحدد الحجم الأولاني."},
 {t:"T",q:"An array of size N is indexed from:",
- o:["1 to N","0 to N","0 to N−1","1 to N−1"],a:2},
+ o:["1 to N","0 to N","0 to N−1","1 to N−1"],a:2,
+ ex:"في أغلب لغات البرمجة، الـ Array بتبدأ من الـ Index <strong>0</strong> وتنتهي عند الـ Index <strong>N-1</strong>."},
 {t:"T",q:"Which array disadvantage occurs when you declare an array of 50 elements but only use 10?",
- o:["Fixed-size overflow","Memory wastage — the other 40 slots cannot be used by other variables","Slow direct access","Index-out-of-bounds error"],a:1},
+ o:["Fixed-size overflow","Memory wastage — the other 40 slots cannot be used by other variables","Slow direct access","Index-out-of-bounds error"],a:1,
+ ex:"عشان الـ Array ليها حجم ثابت (Fixed Size)، لو حجزت 50 مكان واستخدمت 10 بس، الـ 40 مكان الباقيين هيتحجزوا من الذاكرة ومش هيقدر أي برنامج تاني يستخدمهم، وده اسمه <strong>Memory Wastage</strong>."},
 {t:"T",q:"When inserting into a <strong>sorted array</strong>, what operation is required on existing elements?",
- o:["Reconnecting pointers","Shifting elements to make room","Rebuilding the entire array","Resizing the array first"],a:1},
+ o:["Reconnecting pointers","Shifting elements to make room","Rebuilding the entire array","Resizing the array first"],a:1,
+ ex:"لما بتضيف عنصر في وسط الـ Array، لازم تعمل <strong>Shift (إزاحة)</strong> لكل العناصر اللي بعد المكان ده عشان تفتح مكان للعنصر الجديد."},
 {t:"T",q:"Which type of linked list has BOTH <em>next</em> and <em>prev</em> pointers in each node AND the last node's next points back to the first node?",
- o:["Singly linked list","Doubly linked list","Circular linked list","Doubly circular linked list"],a:3},
+ o:["Singly linked list","Doubly linked list","Circular linked list","Doubly circular linked list"],a:3,
+ ex:"ده وصف لـ <strong>Doubly Circular Linked List</strong>، لأن فيها مؤشرين (next و prev) وآخر Node بتشير لأول Node وأول Node بتشير لآخر Node."},
 {t:"T",q:"Backtracking (moving backward) in a <strong>singly linked list</strong> is:",
- o:["Easy using the single pointer","Difficult compared to arrays","Impossible in all cases","The same speed as in arrays"],a:1},
+ o:["Easy using the single pointer","Difficult compared to arrays","Impossible in all cases","The same speed as in arrays"],a:1,
+ ex:"في الـ Singly Linked List مفيش مؤشر <code>prev</code>، فمش بتقدر ترجع لوراء بسهولة. الرجوع لوراء <strong>صعب</strong> لأنك لازم تبدأ من الـ head وتعدي تاني لحد ما توصل للمكان اللي عايزه."},
 
 // ── TRACING (35) ─────────────────────────────────────────────────────
 {t:"TR",q:"Linked list: head→[10|next]→[20|next]→[30|null]. Execute: <code>temp=head; temp=temp.next; temp=temp.next</code>. What is <strong>temp.data</strong>?",
- o:["10","20","30","null"],a:2},
+ o:["10","20","30","null"],a:2,
+ ex:"الـ temp بيتحرك مرتين: الأول يشير لـ 10، بعدين بيتحرك لـ 20، وبعدين بيتحرك لـ 30. فقيمة <code>temp.data</code> النهائية هي <strong>30</strong>."},
 {t:"TR",q:"Traversal pseudocode on list head→[5]→[10]→[15]→null:<pre class='q-code'>temp = head\nWhile (temp != null)\n   Print(temp.data)\n   temp = temp.next</pre>What value is printed <strong>last</strong>?",
- o:["5","10","15","null"],a:2},
+ o:["5","10","15","null"],a:2,
+ ex:"الـ Loop هتطبع 5، ثم 10، ثم 15. في اللفة اللي بعد 15، الـ temp هيبقى null والـ Loop هتقف. إذن آخر قيمة اتطبعت هي <strong>15</strong>."},
 {t:"TR",q:"Insertion at top: list is head→[48]→[17]→[142]→null. New node has data=99.<pre class='q-code'>new.next = head\nhead = new</pre>After execution, what is <strong>head.data</strong>?",
- o:["48","17","99","142"],a:2},
+ o:["48","17","99","142"],a:2,
+ ex:"الـ New Node (data=99) بقت هي الأولى، لأننا قولنا <code>head = new</code>. فالـ head دلوقتي واقف عند الـ Node اللي قيمتها <strong>99</strong>."},
 {t:"TR",q:"Execute this traversal on list head→[6]→[4]→[17]→[42]→null:<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   Last = temp\n   temp = temp.next</pre>What is <strong>temp.data</strong> when the loop exits?",
- o:["6","17","42","4"],a:2},
+ o:["6","17","42","4"],a:2,
+ ex:"الـ Loop بتفضل تمشي لحد ما <code>temp.next == null</code>، وده بيحصل لما الـ temp يكون واقف على آخر Node. آخر Node قيمتها <strong>42</strong>."},
 {t:"TR",q:"Using the same traversal as the previous question on head→[6]→[4]→[17]→[42]→null, what is <strong>Last.data</strong> when the loop exits?",
- o:["17","42","4","6"],a:0},
+ o:["17","42","4","6"],a:0,
+ ex:"الـ Last بتحتفظ دايما بالـ Node اللي قبل الـ temp. قبل ما الـ temp يقف على 42، كان واقف على 17، فالـ Last بتساوي Node اللي قيمتها <strong>17</strong>."},
 {t:"TR",q:"List: head→[A]→[B]→[C]→null. Execute: <code>head = head.next</code>. What is the new <strong>head.data</strong>?",
- o:["A","B","C","null"],a:1},
+ o:["A","B","C","null"],a:1,
+ ex:"لما بنعمل <code>head = head.next</code> بنخلي الـ head يشير للعنصر اللي بعد الأول. فالـ head هيشير لـ B، و <code>head.data</code> هتبقى <strong>B</strong>."},
 {t:"TR",q:"Delete from top of list head→[6]→[4]→[17]→[42]→null:<pre class='q-code'>temp = head\nhead = temp.next\nfree(temp)</pre>What is the new <strong>head.data</strong>?",
- o:["6","4","17","42"],a:1},
+ o:["6","4","17","42"],a:1,
+ ex:"بنخلي الـ head يشير للعنصر التاني (temp.next اللي هو 4)، وبعدين بنمسح الأول. فالـ head الجديد قيمته <strong>4</strong>."},
 {t:"TR",q:"Insert in the middle: list head→[48]→[17]→[142]→null. temp points to node 17. New node data=93.<pre class='q-code'>new.next = temp.next\ntemp.next = new</pre>After execution, node 17's next points to data:",
- o:["48","142","93","null"],a:2},
+ o:["48","142","93","null"],a:2,
+ ex:"بما إننا عملنا <code>temp.next = new</code>، يبقى الـ Node اللي قيمتها 17 الـ Pointer بتاعها بيشير للـ Node الجديدة اللي قيمتها <strong>93</strong>."},
 {t:"TR",q:"After the insertion in the previous question (inserting 93 between 17 and 142), node <strong>93</strong>'s next pointer points to data:",
- o:["17","48","null","142"],a:3},
+ o:["17","48","null","142"],a:3,
+ ex:"أول خطوة كانت <code>new.next = temp.next</code>، والـ temp.next كان بيشير لـ 142. فالـ Node الجديدة (93) بقت هي اللي واصلة لـ <strong>142</strong>."},
 {t:"TR",q:"Traversal of list [10]→[20]→[30]→[40]→null using <code>while(temp!=null)</code>. How many times does the while condition evaluate to <strong>TRUE</strong>?",
- o:["3","4","5","2"],a:1},
+ o:["3","4","5","2"],a:1,
+ ex:"الـ temp هيتحقق إنه مش null 4 مرات (عند 10، 20، 30، 40). في المرة الخامسة الـ temp هيكون null فالشرط هيبقى False. إذن الـ Condition اتقق <strong>4 مرات</strong>."},
 {t:"TR",q:"Array: <code>int[]scores = new int[10]</code>. Using 0-based indexing, valid indices range from:",
- o:["1 to 10","0 to 9","0 to 10","1 to 9"],a:1},
+ o:["1 to 10","0 to 9","0 to 10","1 to 9"],a:1,
+ ex:"Array حجمها 10، بتبدأ من 0 لحد 9. الآخر ده دايماً الحجم ناقص 1. فالأرقام الصحيحة من <strong>0 لـ 9</strong>."},
 {t:"TR",q:"List: head→[5]→[10]→[15]→null. Execute: <code>new.data=1; new.next=head; head=new</code>. After insertion, what is the order from head?",
- o:["5,1,10,15","1,5,10,15","5,10,15,1","10,5,1,15"],a:1},
+ o:["5,1,10,15","1,5,10,15","5,10,15,1","10,5,1,15"],a:1,
+ ex:"إضافة في الأول (Insert at top). الـ Node الجديدة (1) بقت هي الأولى وبتشير للـ head القديم (5). فالترتيب هيكون <strong>1, 5, 10, 15</strong>."},
 {t:"TR",q:"Delete from end with list head→[6]→[4]→[17]→null. After loop exits, execute: <code>last.next=null; free(temp)</code>. What does node 4's next pointer now point to?",
- o:["17","null","6","4"],a:1},
+ o:["17","null","6","4"],a:1,
+ ex:"عشان نمسح آخر Node (17)، بنخلي الـ Node اللي قبلها (4) تشير لـ <strong>null</strong> بدل ما تشير لـ 17."},
 {t:"TR",q:"Insert in middle: temp points to node 17 in head→[48]→[17]→[142]→null. Execute: <code>new.next=temp.next; temp.next=new</code> (new.data=93). What is head.next.next.data?",
- o:["17","93","142","48"],a:1},
+ o:["17","93","142","48"],a:1,
+ ex:"head (48) → head.next (17) → head.next.next (93). الـ Node التالتة في الـ List هي الـ Node الجديدة اللي قيمتها <strong>93</strong>."},
 {t:"TR",q:"Array scores (0-indexed): [79, 87, 94, 82, 67, 98, 87, 81, 74, 91]. What is <strong>scores[5]</strong>?",
- o:["67","98","87","82"],a:1},
+ o:["67","98","87","82"],a:1,
+ ex:"بما إن الـ Array 0-indexed، فهنبدأ عدد من 0. Index 0 هو 79، Index 1 هو 87... Index 5 هو <strong>98</strong>."},
 {t:"TR",q:"Delete from top twice on list head→[10]→[20]→[30]→null. After both deletions, what is <strong>head.data</strong>?",
- o:["10","20","30","null"],a:2},
+ o:["10","20","30","null"],a:2,
+ ex:"أول مسح بيشيل 10 وبقي الـ head هو 20. تاني مسح بيشيل 20 وبقي الـ head هو <strong>30</strong>."},
 {t:"TR",q:"Insertion at end into list head→[1]→[2]→[3]→null (inserting data=4).<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   temp = temp.next\ntemp.next = new\nnew.next = null</pre>How many times does the while loop body execute?",
- o:["1","2","3","4"],a:1},
+ o:["1","2","3","4"],a:1,
+ ex:"الـ temp هيمشي: يشير لـ 1 (next مش null)، يشير لـ 2 (next مش null)، يشير لـ 3 (next بيساوي null، فالـ Loop بتقف). إذن جسم الـ Loop اتنفذ <strong>مرتين (2)</strong>."},
 {t:"TR",q:"Traversal of head→[3]→[1]→[4]→[1]→[5]→null, printing each node. What is the <strong>3rd value</strong> printed?",
- o:["3","1","4","5"],a:2},
+ o:["3","1","4","5"],a:2,
+ ex:"القيم بالترتيب: 1) 3، 2) 1، <strong>3) 4</strong>، 4) 1، 5) 5."},
 {t:"TR",q:"Delete from end of list head→[10]→[20]→null. After the delete-end pseudocode runs, what is <strong>Last.data</strong>?",
- o:["10","20","null","30"],a:0},
+ o:["10","20","null","30"],a:0,
+ ex:"لما بنمسح من الآخر، الـ Loop بتقف والـ temp على 20، والـ Last على 10. فالـ Last اللي بيفضل في الـ List قيمته <strong>10</strong>."},
 {t:"TR",q:"After deleting the last node from head→[10]→[20]→null (previous question), what does node 10's next pointer point to?",
- o:["20","null","10","head"],a:1},
+ o:["20","null","10","head"],a:1,
+ ex:"بعد ما بنمسح آخر عنصر (20)، بنحدث الـ Node اللي قبلها (10) عشان الـ next بتاعها يشير لـ <strong>null</strong> عشان هيبقى هو الآخر."},
 {t:"TR",q:"List head→[5]→[10]→[15]→[20]→null. Traversal runs: temp=head; while(temp!=null){print; temp=temp.next}. How many times is <code>temp=temp.next</code> executed?",
- o:["3","4","5","2"],a:1},
+ o:["3","4","5","2"],a:1,
+ ex:"الـ temp بيتحرك 4 خطوات (من 5 لـ 10، من 10 لـ 15، من 15 لـ 20، من 20 لـ null). فالعبارة ديت اتنفذت <strong>4 مرات</strong>."},
 {t:"TR",q:"Insert at top with data=50 onto head→[100]→[200]→null. Execute: new.data=50; new.next=head; head=new. What does new.next.data equal?",
- o:["null","50","100","200"],a:2},
+ o:["null","50","100","200"],a:2,
+ ex:"الـ new.next بيشير للـ head القديم اللي قيمته 100. فـ <code>new.next.data</code> يساوي <strong>100</strong>."},
 {t:"TR",q:"Singly linked list: node at 4800 has data=10 (next=4900), node at 4900 has data=15 (next=5000), node at 5000 has data=5 (next=null). head=4800. Reading from head, the sequence is:",
- o:["5, 15, 10","10, 5, 15","10, 15, 5","15, 10, 5"],a:2},
+ o:["5, 15, 10","10, 5, 15","10, 15, 5","15, 10, 5"],a:2,
+ ex:"الـ head بيشير للعنوان 4800 (اللي قيمته 10)، وبعدين بنروح 4900 (قيمته 15)، وبعدين 5000 (قيمته 5). فالترتيب <strong>10, 15, 5</strong>."},
 {t:"TR",q:"Delete from middle: list head→[1]→[2]→[3]→[4]→null. Delete node 3. prev points to node 2, temp points to node 3. Execute: <code>prev.next = temp.next</code>. Node 2's next now points to data:",
- o:["3","null","4","1"],a:2},
+ o:["3","null","4","1"],a:2,
+ ex:"بنخلي الـ next بتاع 2 يتجاوز الـ 3 ويشير للـ Node اللي بعدها وهي 4. فـ 2 بيشير لـ <strong>4</strong>."},
 {t:"TR",q:"Array A (1-indexed): A = [2, 7, 4, 1, 5, 6]. What is <strong>A[3]</strong>?",
- o:["2","7","4","1"],a:2},
+ o:["2","7","4","1"],a:2,
+ ex:"بما إنها 1-indexed، الـ Index 1 يساوي 2، والـ Index 2 يساوي 7، والـ Index 3 يساوي <strong>4</strong>."},
 {t:"TR",q:"List head→[A]→[B]→[C]→[D]→null. How many <strong>non-null next pointers</strong> exist in this list?",
- o:["3","4","5","2"],a:1},
+ o:["3","4","5","2"],a:1,
+ ex:"في 4 Nodes، أول 3 فيهم الـ next بتاعهم بيشير للـ Node اللي بعده (Non-null)، وآخر Node الـ next بتاعها null. ففي <strong>3 Non-null</strong> pointers."},
 {t:"TR",q:"Insert at end into a <strong>single-node</strong> list: head→[10]→null. Insert data=20. In the traversal <code>while(temp.next!=null)</code>, how many iterations run before exiting?",
- o:["0","1","2","3"],a:0},
+ o:["0","1","2","3"],a:0,
+ ex:"الـ temp واقف على 10، والـ temp.next بتاعها null. فالشرط <code>temp.next != null</code> طلع False من أول مرة، فالـ Loop مش هتلف خالص (<strong>0 iterations</strong>)."},
 {t:"TR",q:"Doubly linked list: null←[5]↔[7]↔[9]→null (tail=9). Starting from <strong>tail</strong> and following prev pointers, the sequence is:",
- o:["5, 7, 9","9, 5, 7","9, 7, 5","7, 5, 9"],a:2},
+ o:["5, 7, 9","9, 5, 7","9, 7, 5","7, 5, 9"],a:2,
+ ex:"بنبدأ من الـ tail (9)، ونتبع الـ prev: 9 ← 7 ← 5. فالترتيب <strong>9, 7, 5</strong>."},
 {t:"TR",q:"Circular list traversal with do-while: head→[1]→[2]→[3]→(back to 1).<pre class='q-code'>temp = head\ndo {\n   Print(temp.data)\n   temp = temp.next\n} while (temp != head)</pre>Output is:",
- o:["1  2  3","2  3  1","1  2  3  1","3  2  1"],a:0},
+ o:["1  2  3","2  3  1","1  2  3  1","3  2  1"],a:0,
+ ex:"الـ do-while بتطبع الأول وبعدين بتشوف الشرط. هتطبع 1، 2، 3. لما توصل لـ 3 وتعمل temp.next هترجع لـ 1 (head)، فالشرط <code>temp != head</code> هيبقى False والـ Loop بتقف. الناتج <strong>1 2 3</strong>."},
 {t:"TR",q:"List: head→[X]→null. First insert at top: data=Y → Y,X. Then insert at top: data=Z → Z,Y,X. Final order from head?",
- o:["X, Y, Z","Z, Y, X","Y, Z, X","Z, X, Y"],a:1},
+ o:["X, Y, Z","Z, Y, X","Y, Z, X","Z, X, Y"],a:1,
+ ex:"كل مرة بنضيف في الأول، الجديد بيقى هو الـ head. Y بقت قبل X، وبعدين Z بقت قبل Y. فالترتيب من الـ head هيكون <strong>Z, Y, X</strong>."},
 {t:"TR",q:"List head→[3]→[1]→[4]→[1]→[5]→null. Count nodes:<pre class='q-code'>temp=head; count=0\nWhile(temp!=null)\n   count++\n   temp=temp.next\nPrint(count)</pre>Output:",
- o:["3","4","5","0"],a:2},
+ o:["3","4","5","0"],a:2,
+ ex:"بنزود الـ count بواحد مع كل Node. عدد الـ Nodes هو <strong>5</strong>."},
 {t:"TR",q:"Delete from middle of head→[4]→[17]→[42]→null (delete 17). Pseudocode: <code>prev.next=temp.next; free(temp)</code>. After deletion, what is head.next.data?",
- o:["17","null","42","4"],a:2},
+ o:["17","null","42","4"],a:2,
+ ex:"بعد ما شيلنا 17، الـ head (4) بقى الـ next بتاعه بيشير مباشرة لـ 42. فـ <code>head.next.data</code> = <strong>42</strong>."},
 {t:"TR",q:"List head→[1]→[2]→[3]→[4]→[5]→null. Traverse:<pre class='q-code'>temp = head\nWhile (temp.next != null)\n   temp = temp.next\nPrint(temp.data)</pre>Output:",
- o:["1","3","5","4"],a:2},
+ o:["1","3","5","4"],a:2,
+ ex:"الـ Loop بتقف لما temp.next يساوي null، وده بيحصل عند آخر Node بس. قيمة آخر Node هي <strong>5</strong>."},
 {t:"TR",q:"Circular list: head→[10]→[20]→[30]→(back to head). Starting at head, after <strong>3</strong> moves of <code>temp=temp.next</code>, temp.data = ?",
- o:["20","30","10","null"],a:2},
+ o:["20","30","10","null"],a:2,
+ ex:"الـ temp بيتحرك 3 خطوات: 1) لـ 20، 2) لـ 30، 3) لـ 10 (head تاني). فقيمتها هترجع <strong>10</strong>."},
 {t:"TR",q:"List: head→[A]→[B]→[C]→null. Execute:<pre class='q-code'>temp = head\nWhile (temp != null)\n   prev = temp\n   temp = temp.next</pre>After the loop exits, what is <strong>prev.data</strong> and what is <strong>temp</strong>?",
- o:["prev=B, temp=C","prev=C, temp=null","prev=null, temp=A","prev=A, temp=null"],a:1},
+ o:["prev=B, temp=C","prev=C, temp=null","prev=null, temp=A","prev=A, temp=null"],a:1,
+ ex:"الـ prev دايما بتشيل الـ Node اللي قبل الـ temp. لما الـ temp بتوصل لـ null (وتقف الـ Loop)، الـ prev بتكون واقفة على آخر Node اللي هي C. فـ <strong>prev=C, temp=null</strong>."},
 
 // ── CHOOSE CORRECT CODE (25) ─────────────────────────────────────────
 {t:"C",q:"Which pseudocode correctly traverses a singly linked list and <strong>visits all nodes</strong> including the last?",
  o:["temp=head; while(temp!=null){ print(temp.data); temp=temp.next }",
     "temp=head; while(temp.next!=null){ print(temp.data); temp=temp.next }",
     "temp=head; while(temp!=head){ print(temp.data); temp=temp.next }",
-    "temp=null; while(temp!=head){ print(temp.data); temp=temp.next }"],a:0},
+    "temp=null; while(temp!=head){ print(temp.data); temp=temp.next }"],a:0,
+ ex:"شرط <code>temp != null</code> هو الصح عشان يطبع آخر Node وبعدين يخرج. لو استخدمنا <code>temp.next != null</code> آخر Node مش هتتطبع."},
 {t:"C",q:"Which pseudocode correctly inserts a new node at the <strong>TOP</strong> of a linked list?",
  o:["head=new; new.next=head",
     "new.next=head; head=new",
     "head=new; new.next=null",
-    "new.next=null; head=new"],a:1},
+    "new.next=null; head=new"],a:1,
+ ex:"لازم الأول نوصل الـ Node الجديدة بالـ head القديم (<code>new.next=head</code>) وبعدين نحدث الـ head عشان يشير للجديد (<code>head=new</code>). لو عكسنا الترتيب هنبقي الـ head القديم."},
 {t:"C",q:"Which pseudocode correctly deletes the <strong>first node</strong> of a linked list?",
  o:["free(head); head=head.next",
     "temp=head; head=temp.next; free(temp)",
     "temp=head.next; free(head)",
-    "head=null; free(head)"],a:1},
+    "head=null; free(head)"],a:1,
+ ex:"لازم نحفظ الـ head في متغير مؤقت (temp)، وبعدين نحدث الـ head للعنصر التاني، وبعدين نمسح الـ temp. لو مسحنا الأول هنبقي عارفين الـ Element اللي بعده."},
 {t:"C",q:"To traverse and reach the <strong>LAST node</strong> (for end-deletion or end-insertion), the correct loop condition is:",
- o:["while(temp != null)","while(temp.next != null)","while(temp.data != null)","while(temp != head)"],a:1},
+ o:["while(temp != null)","while(temp.next != null)","while(temp.data != null)","while(temp != head)"],a:1,
+ ex:"شرط <code>temp.next != null</code> بيخليك تقف عند آخر Node وعارف إن اللي بعدها null، وده اللي محتاجينه عشان نربطها بـ Node جديدة أو نمسحها."},
 {t:"C",q:"Which correctly inserts a new node at the <strong>END</strong> of a linked list?",
  o:["temp=head; while(temp!=null){temp=temp.next}; temp=new; new.next=null",
     "temp=head; while(temp.next!=null){temp=temp.next}; temp.next=new; new.next=null",
     "temp=head; while(temp.next!=null){temp=temp.next}; temp=new",
-    "temp=head; while(temp!=null){temp=temp.next}; temp.next=new"],a:1},
+    "temp=head; while(temp!=null){temp=temp.next}; temp.next=new"],a:1,
+ ex:"لازم نوصل لآخر Node (temp)، ونخلي الـ next بتاعها يشير للـ new (<code>temp.next=new</code>)، ونخلي الـ new اللي هو الآخر يشير لـ null (<code>new.next=null</code>)."},
 {t:"C",q:"For deletion from the <strong>middle</strong>, which order of operations is correct?",
  o:["free(temp); prev.next=temp.next",
     "prev.next=temp.next; free(temp)",
     "temp.next=null; free(temp)",
-    "prev=temp.next; free(temp)"],a:1},
+    "prev=temp.next; free(temp)"],a:1,
+ ex:"لازم الأول نوصل الـ Links ببعض (<code>prev.next=temp.next</code>) عشان الـ List ماتقطعش، وبعدين نمسح الـ Node من الذاكرة (<code>free(temp)</code>)."},
 {t:"C",q:"Which correctly creates the <strong>first node</strong> in an initially empty linked list?",
  o:["head=null; new.data=x; head=new",
     "new.data=x; new.next=null; head=new",
     "head=new; new.data=x; new.next=head",
-    "new=head; head.data=x"],a:1},
+    "new=head; head.data=x"],a:1,
+ ex:"لازم نحط القيمة (<code>new.data=x</code>)، ونخلي الـ next بتاعها null عشان هي الوحيدة (<code>new.next=null</code>)، وبعدين نحدث الـ head (<code>head=new</code>)."},
 {t:"C",q:"To insert a new node <strong>between</strong> node A (temp) and node B (temp.next), which is correct?",
  o:["new.next=temp; temp.next=new",
     "temp.next=new; new.next=temp.next",
     "new.next=temp.next; temp.next=new",
-    "new.next=temp; temp=new"],a:2},
+    "new.next=temp; temp=new"],a:2,
+ ex:"الترتيب الصح: لازم الأول تخلي الـ الجديدة تشير للـ B (<code>new.next=temp.next</code>)، وبعدين تخلي A تشير للجديدة (<code>temp.next=new</code>). لو عكست هتفقد الـ B."},
 {t:"C",q:"In a <strong>circular linked list</strong>, which condition correctly signals that traversal is complete?",
- o:["temp == null","temp.next == null","temp.next == head","temp == tail"],a:2},
+ o:["temp == null","temp.next == null","temp.next == head","temp == tail"],a:2,
+ ex:"في الـ Circular، الـ آخر Node بتشير للـ head. فبنستمر في الـ traversal لحد ما نلاقي إن الـ Node اللي واقفين عندها الـ next بتاعها بيشير للـ head تاني (<code>temp.next == head</code>)."},
 {t:"C",q:"To delete from the <strong>END</strong>, after the loop finds last node (temp) and second-to-last (Last), the correct operation is:",
- o:["Last = null; free(temp)","Last.next = null; free(temp)","temp.next = null; free(Last)","Last.next = temp; free(temp)"],a:1},
+ o:["Last = null; free(temp)","Last.next = null; free(temp)","temp.next = null; free(Last)","Last.next = temp; free(temp)"],a:1,
+ ex:"لازم نخلي الـ Node اللي قبل الأخيرة (Last) هي الأخيرة بجعل الـ next بتاعها null (<code>Last.next = null</code>)، وبعدين نمسح القديمة (<code>free(temp)</code>)."},
 {t:"C",q:"Before traversing a linked list, which check should be performed to safely handle an empty list?",
- o:["if(head.data == null) return","if(head.next == null) return","if(head == null) return","if(head == 0) return"],a:2},
+ o:["if(head.data == null) return","if(head.next == null) return","if(head == null) return","if(head == 0) return"],a:2,
+ ex:"لو الـ List فاضية، الـ head هيكون <strong>null</strong>. فلازم نتأكد إن <code>head != null</code> قبل ما نبدأ الـ traversal عشان م يحصلش Error."},
 {t:"C",q:"In insertion at the middle, the traversal loop must stop at the node <em>before</em> the insertion point. Which condition achieves this for inserting after a specific node?",
- o:["while(temp != target)","while(temp.next != target)","while(temp.data != target)","while(temp.next.data != target)"],a:3},
+ o:["while(temp != target)","while(temp.next != target)","while(temp.data != target)","while(temp.next.data != target)"],a:3,
+ ex:"عشان نقف عند الـ Node اللي قبل المكان اللي عايزين نضيف فيه، لازم نقف لما نلاقي إن الـ Node اللي بعدنا هي الـ Target. فبنشوف <code>temp.next.data != target</code>."},
 {t:"C",q:"Which correctly implements <strong>deletion from the TOP</strong> in the safe order that prevents losing the head reference?",
  o:["head=head.next; free(head)",
     "free(head); head=head.next",
     "temp=head; head=temp.next; free(temp)",
-    "temp=head.next; head=temp; free(head)"],a:2},
+    "temp=head.next; head=temp; free(head)"],a:2,
+ ex:"عشان نمسح الأول بأمان، لازم نحفظ الـ head في متغير (temp)، وبعدين نحدث الـ head للعنصر التاني (<code>head=temp.next</code>)، وبعدين نمسح الـ temp."},
 {t:"C",q:"When inserting a new node into an <strong>empty list</strong>, new.next should be set to:",
- o:["head","null","new (itself)","tail"],a:1},
+ o:["head","null","new (itself)","tail"],a:1,
+ ex:"لأنها أول وأخر Node في الـ List، لازم الـ next بتاعها يكون <strong>null</strong>."},
 {t:"C",q:"Which traversal loop would <strong>MISS</strong> the last node in a singly linked list?",
  o:["while(temp != null){ process; temp=temp.next }",
     "while(temp.next != null){ process; temp=temp.next }",
     "for each node from head while not null",
-    "do{ process; temp=temp.next }while(temp!=null)"],a:1},
+    "do{ process; temp=temp.next }while(temp!=null)"],a:1,
+ ex:"شرط <code>temp.next != null</code> هيقف الـ Loop قبل ما يعالج آخر Node، لأن آخر Node الـ next بتاعها null، فهيتهمل."},
 {t:"C",q:"In a <strong>doubly linked list</strong>, to traverse backward from tail to head:",
  o:["temp=head; while(temp!=null){ print; temp=temp.prev }",
     "temp=tail; while(temp!=null){ print; temp=temp.prev }",
     "temp=tail; while(temp!=null){ print; temp=temp.next }",
-    "temp=tail.prev; while(temp!=null){ print; temp=temp.prev }"],a:1},
+    "temp=tail.prev; while(temp!=null){ print; temp=temp.prev }"],a:1,
+ ex:"بنبدأ من الـ tail، وبنعمل print، وبنتحرك لوراء عن طريق الـ <code>temp.prev</code> لحد ما نوصل لـ null."},
 {t:"C",q:"Which pseudocode segment for <strong>delete from end</strong> is in the correct order?",
  o:["last.next=null; free(temp) — where Last is second-to-last and temp is last",
     "free(temp); last.next=null",
     "last=null; free(temp)",
-    "temp.next=null; free(last)"],a:0},
+    "temp.next=null; free(last)"],a:0,
+ ex:"لازم الأول نقطع الاتصال بآخر Node عن طريق جعل الـ Node اللي قبلها تشير لـ null (<code>last.next=null</code>)، وبعدين نمسحها (<code>free(temp)</code>)."},
 {t:"C",q:"Accessing the <strong>3rd element</strong> in a linked list from head (1-indexed) using pointer traversal:",
- o:["head.data[3]","head.next.next.data","head[2].data","A[3] — same as array"],a:1},
+ o:["head.data[3]","head.next.next.data","head[2].data","A[3] — same as array"],a:1,
+ ex:"الـ Linked List مفيهاش Random Access زي الـ Array. عشان توصل للعنصر التالت، لازم تتحرك خطوتين من الـ head: <code>head.next.next.data</code>."},
 {t:"C",q:"Which correctly states why <code>free(head); head = head.next</code> is a <strong>bug</strong>?",
- o:["head should be freed after head=head.next","head.next should be freed first","This is correct code — no bug","free() is not needed for linked lists"],a:0},
+ o:["head should be freed after head=head.next","head.next should be freed first","This is correct code — no bug","free() is not needed for linked lists"],a:0,
+ ex:"لما بتعمل <code>free(head)</code> إنت بتمسح البيانات بتاعة الـ head من الذاكرة، فبالتالي لما تحاول توصل لـ <code>head.next</code> مش هتلاقي حاجة (Dangling pointer). لازم تجيب الـ next الأول وبعدين تمسح."},
 {t:"C",q:"To correctly insert in the <strong>middle</strong>, which statement must execute FIRST?",
- o:["temp.next = new","new.next = temp.next","new = temp.next","head = new"],a:1},
+ o:["temp.next = new","new.next = temp.next","new = temp.next","head = new"],a:1,
+ ex:"لازم الأول تحفظ رابط الـ Node اللي بعد الـ temp في الـ Node الجديدة (<code>new.next = temp.next</code>)، عشان لو وصلت الـ temp بالـ new الأول (الاختيار الأول) هتكون فقدت عنوان الـ Node اللي بعدك."},
 {t:"C",q:"In deletion from the <strong>middle</strong>, which step is crucial to prevent a memory leak?",
- o:["Setting prev.next = temp.next","Calling free(temp) after reconnecting pointers","Setting temp.next = null","Setting temp = null"],a:1},
+ o:["Setting prev.next = temp.next","Calling free(temp) after reconnecting pointers","Setting temp.next = null","Setting temp = null"],a:1,
+ ex:"الـ Memory Leak بيحصل لما بقطع الـ Node من الـ List وانسى افرغ الذاكرة بتاعتها. عشان كده لازم نستدعي <code>free(temp)</code> بعد ما نوصل الـ Pointers ببعض."},
 {t:"C",q:"Which pseudocode correctly counts the nodes in a linked list?",
  o:["count=0; temp=head; while(temp!=null){ count++; temp=temp.next }",
     "count=1; temp=head; while(temp!=null){ count++; temp=temp.next }",
     "count=0; temp=head; while(temp.next!=null){ count++; temp=temp.next }",
-    "count=0; while(head!=null){ count++ }"],a:0},
+    "count=0; while(head!=null){ count++ }"],a:0,
+ ex:"بنبدأ الـ count من 0، وبنلف على كل الـ Nodes لحد الـ null وبنزود واحد في كل لفة. الاختيار التاني هيبدأ من 1 وده غلط، والتالت هينسي آخر Node."},
 {t:"C",q:"The correct pseudocode for <strong>Insert at Top</strong> with steps labeled is:",
  o:["Step1: head=new. Step2: new.next=head. Step3: reconnect",
     "Step1: new.next=head. Step2: head=new",
     "Step1: new=head. Step2: new.next=null",
-    "Step1: head=new. Step2: new.data=x"],a:1},
+    "Step1: head=new. Step2: new.data=x"],a:1,
+ ex:"الترتيب الصح: الأول نوصل الـ Node الجديدة بالـ List القديمة (<code>new.next=head</code>)، وبعدين بنحدث الـ head عشان يبقى هو الجديد (<code>head=new</code>)."},
 {t:"C",q:"When inserting a node between two nodes in a singly linked list, how many pointer assignments are needed?",
- o:["1 (only new.next)","2 (new.next and temp.next)","3 (create, link forward, link back)","4 (two for each direction)"],a:1},
+ o:["1 (only new.next)","2 (new.next and temp.next)","3 (create, link forward, link back)","4 (two for each direction)"],a:1,
+ ex:"محتاجين تعديل مؤشرين بس: 1) <code>new.next = temp.next</code> (الجديد يشير لللي بعده)، 2) <code>temp.next = new</code> (اللي قبله يشير للجديد)."},
 {t:"C",q:"For a linked list, direct array-style access like <code>list[5]</code> is:",
- o:["Possible and O(1) efficient","Not possible — must traverse sequentially from head","Possible only for circular lists","Possible only with a tail pointer"],a:1},
+ o:["Possible and O(1) efficient","Not possible — must traverse sequentially from head","Possible only for circular lists","Possible only with a tail pointer"],a:1,
+ ex:"الـ Linked List مبتدعمش الـ Random Access. عشان توصل للعنصر الخامس لازم تبدأ من الأول وتعدى على 5 عناصر (Sequential Access)."},
 
 // ── TRICKY TRACING (25) ──────────────────────────────────────────────
 {t:"TT",q:"List: head→[1]→[2]→[3]→[4]→null. Execute:<pre class='q-code'>temp = head\nWhile (temp.next.next != null)\n   temp = temp.next\nPrint(temp.data)</pre>What is printed?",
- o:["2","3","4","1"],a:1},
+ o:["2","3","4","1"],a:1,
+ ex:"الـ Loop بتقف لما الـ Node اللي بعد اللي بعد temp تبقى null (يعني وصلنا قبل الآخر بواحد). هيمشي: 1→2 (لأن 3.next هي 4 مش null)، 2→3 (لأن 4.next هي null). فالـ temp هتقف عند <strong>3</strong>."},
 {t:"TT",q:"List head→[10]→[20]→[30]→null. Delete from end <strong>twice</strong> (running the delete-end algorithm two times). After both deletions, what does the list contain?",
- o:["head→[10]→null","head→null (empty)","head→[20]→null","head→[30]→null"],a:0},
+ o:["head→[10]→null","head→null (empty)","head→[20]→null","head→[30]→null"],a:0,
+ ex:"أول مرة بنمسح الـ 30، القائمة بقت 10→20. تاني مرة بنمسح الـ 20، القائمة بقت <strong>head→[10]→null</strong>."},
 {t:"TT",q:"Execute on list head→[5]→[10]→[15]→null:<pre class='q-code'>new.data = 7\nnew.next = head.next\nhead.next = new</pre>What is <strong>head.next.next.data</strong>?",
- o:["5","7","10","15"],a:2},
+ o:["5","7","10","15"],a:2,
+ ex:"الـ head (5) بقت تشير لـ 7 (head.next=new)، والـ 7 بتشير لـ 10 (new.next=head.next القديم). فـ head.next.next.data يعني 7.next.data وهي <strong>10</strong>."},
 {t:"TT",q:"A linked list has 100 nodes. To access the <strong>99th node</strong> from head (node 1), how many <code>temp=temp.next</code> operations are needed?",
- o:["98","99","100","1"],a:0},
+ o:["98","99","100","1"],a:0,
+ ex:"أول Node هي الـ head (مش محتاج حركة). عشان توصل للـ Node رقم 99، محتاج تتحرك 98 مرة (1→2، 2→3... 98→99). فمحتاج <strong>98 عملية</strong>."},
 {t:"TT",q:"Circular list: head→[A]→[B]→[C]→(back to A). Execute: temp=head; temp=temp.next; temp=temp.next; temp=temp.next. What is <strong>temp.data</strong>?",
- o:["A","B","C","null"],a:0},
+ o:["A","B","C","null"],a:0,
+ ex:"الـ temp بتتحرك 3 خطوات: 1) B، 2) C، 3) A (لأنها circular ورجعنا للأول). فقيمة temp.data هي <strong>A</strong>."},
 {t:"TT",q:"What is the <strong>critical error</strong> in this deletion code?<pre class='q-code'>free(head)\nhead = head.next</pre>",
  o:["head.next is freed instead of head",
     "After free(head), head is invalid — head.next cannot be accessed",
     "No error — this is correct",
-    "free() should not be used"],a:1},
+    "free() should not be used"],a:1,
+ ex:"لما بتعمل <code>free(head)</code> إنت بتمسح البيانات بتاعة الـ head من الذاكرة، فبالتالي لما تحاول توصل لـ <code>head.next</code> مش هتلاقي حاجة (Dangling pointer). لازم تجيب الـ next الأول وبعدين تمسح."},
 {t:"TT",q:"List: head→[1]→[2]→[3]→null. Insert at top three times: data=4, then data=5, then data=6. Final order from head?",
- o:["1,2,3,4,5,6","6,5,4,1,2,3","4,5,6,1,2,3","6,4,5,1,2,3"],a:1},
+ o:["1,2,3,4,5,6","6,5,4,1,2,3","4,5,6,1,2,3","6,4,5,1,2,3"],a:1,
+ ex:"كل مرة بنضيف في الأول بكون دايماً هو الـ head. فـ 4 بتشير لـ 1,2,3. وبعدين 5 تشير لـ 4. وبعدين 6 تشير لـ 5. فالترتيب من الـ head هيكون <strong>6, 5, 4, 1, 2, 3</strong>."},
 {t:"TT",q:"Doubly linked list: null←[A]↔[B]↔[C]→null. Execute: <code>B.prev.next = B.next; B.next.prev = B.prev; free(B)</code>. What is the resulting list?",
- o:["null←[A]↔[C]→null","null←[A]→null and null←[C]→null (disconnected)","List unchanged","A points to null"],a:0},
+ o:["null←[A]↔[C]→null","null←[A]→null and null←[C]→null (disconnected)","List unchanged","A points to null"],a:0,
+ ex:"الكود بيوصل الـ A بالـ C تخطي للـ B. (<code>A.next = C</code>) و (<code>C.prev = A</code>). فالقائمة بقت <strong>null←[A]↔[C]→null</strong>."},
 {t:"TT",q:"Array A=[1,2,3,4,5] (0-indexed, size=5). Currently has 4 elements: [1,2,3,4,_]. Insert value=0 at <strong>position 0</strong> (0-indexed). How many elements must shift right?",
- o:["1","2","3","4"],a:3},
+ o:["1","2","3","4"],a:3,
+ ex:"لما بتضيف في أول مكان (Position 0)، كل العناصر اللي بعدده لازم تتحرك يمين (Shift). بما إن فيه 4 عناصر، فـ <strong>4 عناصر</strong> هتتحرك."},
 {t:"TT",q:"List: head→[10]→[20]→[30]→null. Execute:<pre class='q-code'>temp = head.next\nhead.next = temp.next\nfree(temp)</pre>What is the resulting list?",
- o:["head→[10]→[30]→null","head→[20]→[30]→null","head→[10]→[20]→null","head→[30]→null"],a:0},
+ o:["head→[10]→[30]→null","head→[20]→[30]→null","head→[10]→[20]→null","head→[30]→null"],a:0,
+ ex:"الـ temp واقف على 20. بنخلي الـ head (10) يشير لـ temp.next اللي هو 30. وبعدين بنمسح الـ 20. فالنتيجة <strong>head→[10]→[30]→null</strong>."},
 {t:"TT",q:"Linked list: head→[A]→[B]→[C]→[D]→[E]→null. We forcefully set: <code>head.next.next = null</code> (i.e., B.next = null). Starting from head, how many nodes are now <strong>accessible</strong>?",
- o:["5","3","2","4"],a:2},
+ o:["5","3","2","4"],a:2,
+ ex:"لما خلينا الـ B.next = null، الـ List اتقطعت هنا. من الـ head هنقدر نوصل لـ A وبعدين B وبس. الـ C و D و E بقوا غير reachable (Memory Leak). ففي <strong>2 Nodes</strong> بس accessible."},
 {t:"TT",q:"What is the <strong>time complexity</strong> of inserting a node at the <strong>BEGINNING</strong> of a linked list (regardless of list size)?",
- o:["O(N)","O(N²)","O(log N)","O(1)"],a:3},
+ o:["O(N)","O(N²)","O(log N)","O(1)"],a:3,
+ ex:"الإضافة في الأول بتيجي في خطوتين ثابتين من غير ما نحتاج نعدي على الـ List: <code>new.next=head</code> و <code>head=new</code>. فالـ Time Complexity هي <strong>O(1)</strong> (Constant Time)."},
 {t:"TT",q:"What is the time complexity of inserting at the <strong>END</strong> of a singly linked list <em>without</em> a tail pointer?",
- o:["O(1)","O(log N)","O(N)","O(N²)"],a:2},
+ o:["O(1)","O(log N)","O(N)","O(N²)"],a:2,
+ ex:"من غير الـ Tail pointer، لازم نبدأ من الأول ونلف لحد ما نوصل لآخر Node (N خطوة) عشان نربطها بالـ Node الجديدة. فالـ Time Complexity هي <strong>O(N)</strong>."},
 {t:"TT",q:"After: <code>temp=head; head=null; Print(temp.data)</code> on list head→[42]→[10]→null, what is printed?",
- o:["null","42","10","Error — temp is null"],a:1},
+ o:["null","42","10","Error — temp is null"],a:1,
+ ex:"لما بنعمل <code>temp=head</code>، الـ temp بيشير لأول Node اللي قيمتها 42. لما بنخلي <code>head=null</code> ده بيقطع الـ List بس الـ temp لسه واقف على الـ Node اللي في الذاكرة واللي قيمتها <strong>42</strong>."},
 {t:"TT",q:"Circular list: head→[10]→[20]→[30]→(back to head). Starting at head, how many <code>temp=temp.next</code> operations are needed to return to head?",
- o:["2","3","4","1"],a:1},
+ o:["2","3","4","1"],a:1,
+ ex:"الـ List فيها 3 Nodes. لما تبدأ من الـ head هتتحرك للـ 20 (1)، للـ 30 (2)، وهترجع للـ head (3). فبتحتاج <strong>3 عمليات</strong>."},
 {t:"TT",q:"After deleting the <strong>first</strong> and <strong>last</strong> nodes from head→[5]→[10]→[15]→[20]→null (in that order), what is the resulting list?",
- o:["head→[10]→[15]→null","head→[5]→[20]→null","head→[15]→null","head→[10]→[20]→null"],a:0},
+ o:["head→[10]→[15]→null","head→[5]→[20]→null","head→[15]→null","head→[10]→[20]→null"],a:0,
+ ex:"أول عملية مسحت الأول (5)، فبقت 10→15→20. تاني عملية مسحت الآخر (20)، فبقت <strong>10→15→null</strong>."},
 {t:"TT",q:"List head→[5]→[10]→[15]→null. Execute insertion: <code>new.data=7; new.next=head; head=new</code>. Then immediately delete from top: <code>temp=head; head=temp.next; free(temp)</code>. What is the <strong>final list</strong>?",
- o:["head→[7]→[5]→[10]→[15]→null","head→[5]→[10]→[15]→null","head→[10]→[15]→null","head→[7]→[10]→[15]→null"],a:1},
+ o:["head→[7]→[5]→[10]→[15]→null","head→[5]→[10]→[15]→null","head→[10]→[15]→null","head→[7]→[10]→[15]→null"],a:1,
+ ex:"عملية الإضافة حطت الـ 7 في الأول، وعملية المسح شالت أول Node (اللي هي الـ 7). فالقائمة رجعت زي ما كانت: <strong>5→10→15→null</strong>."},
 {t:"TT",q:"In this code, if the list is <strong>empty</strong> (head=null), what happens when executed?<pre class='q-code'>temp = head\nnew.next = temp.next\ntemp.next = new</pre>",
- o:["Inserts correctly at the front","temp is null — temp.next causes a null pointer error","new.next = null (valid — empty list handled)","head becomes new"],a:1},
+ o:["Inserts correctly at the front","temp is null — temp.next causes a null pointer error","new.next = null (valid — empty list handled)","head becomes new"],a:1,
+ ex:"لو الـ head = null، فالـ temp = null. لما تحاول تعمل <code>temp.next</code> إنت بتحاول تدخل على عنصر في حاجة مش موجودة، وده بيعمل <strong>Null Pointer Error</strong>."},
 {t:"TT",q:"Array A=[10,20,30,40,50] (0-indexed). Delete element at index 2 by shifting elements left. What is <strong>A[3]</strong> after deletion?",
- o:["30","40","50","0"],a:2},
+ o:["30","40","50","0"],a:2,
+ ex:"لما بنمسح الـ Index 2 (اللي قيمته 30)، العناصر اللي بعده ببت shift لشمال. الـ 40 هتنزل مكان 2، والـ 50 هتنزل مكان 3. فـ <code>A[3]</code> هتبقى <strong>50</strong>."},
 {t:"TT",q:"List: head→[1]→[2]→[3]→[4]→[5]→null. Count how many nodes have an <em>even</em> data value:<pre class='q-code'>temp=head; count=0\nWhile(temp!=null)\n   if(temp.data % 2 == 0) count++\n   temp=temp.next\nPrint(count)</pre>",
- o:["1","2","3","4"],a:1},
+ o:["1","2","3","4"],a:1,
+ ex:"الأرقام الزوجية في الـ List هي 2 و 4 بس. فالـ count هتزيد مرتين فقط، والناتج هيكون <strong>2</strong>."},
 {t:"TT",q:"How many pointer assignments are needed to <strong>completely remove</strong> node B from a <em>doubly</em> linked list A↔B↔C?",
- o:["1 (just A.next=C)","2 (A.next=C and C.prev=A)","3 (A.next=C, C.prev=A, free(B))","4 (set all pointers to null first)"],a:1},
+ o:["1 (just A.next=C)","2 (A.next=C and C.prev=A)","3 (A.next=C, C.prev=A, free(B))","4 (set all pointers to null first)"],a:1,
+ ex:"لازم نعدل الـ Pointers بتاعة الـ Nodes اللي حوالين الـ B: الأول <code>A.next = C</code>، والتاني <code>C.prev = A</code>. مسح الـ B ده اسمه Memory Deallocation مش Pointer Assignment."},
 {t:"TT",q:"List: head→[10]→[20]→[30]→[40]→null. Execute insert at middle (after node 20): new.data=25; new.next=temp.next; temp.next=new (temp points to node 20). Then immediately traverse and print all. What is printed at <strong>position 4</strong>?",
- o:["20","25","30","40"],a:2},
+ o:["20","25","30","40"],a:2,
+ ex:"بعد الإضافة الـ List بقت: 10 → 20 → 25 → 30 → 40. العنصر الرابع (Position 4) هو <strong>30</strong>."},
 {t:"TT",q:"In a singly linked list of N nodes, what is the time complexity of <strong>searching</strong> for a specific value (worst case)?",
- o:["O(1)","O(log N)","O(N)","O(N²)"],a:2},
+ o:["O(1)","O(log N)","O(N)","O(N²)"],a:2,
+ ex:"في أسوأ الحالات (Worst Case)، العنصر مش موجود أو في الآخر، فهتضر تعدي على كل الـ N عناصر. فالـ Complexity هي <strong>O(N)</strong>."},
 {t:"TT",q:"A singly linked list currently has: head→[A]→[B]→null. After executing: <code>B.next=head</code>, what type of structure is created?",
- o:["A doubly linked list","A circular linked list","A doubly circular linked list","An array-like structure"],a:1},
+ o:["A doubly linked list","A circular linked list","A doubly circular linked list","An array-like structure"],a:1,
+ ex:"لما آخر Node (B) بقت تشير لأول Node (head)، الـ List قفلت على نفسها وده بيعمل <strong>Circular Linked List</strong>."},
 {t:"TT",q:"Which scenario would cause an <strong>infinite loop</strong> during traversal with <code>while(temp!=null)</code>?",
  o:["An empty list (head=null)",
     "A circular linked list where the last node points back to head",
     "A list with only one node",
-    "A list where all node data values are the same"],a:1},
+    "A list where all node data values are the same"],a:1,
+ ex:"في الـ Circular Linked List، مفيش Node قيمتها null، فشرط <code>temp!=null</code> هيبقى True دايماً والـ Loop مش هتقف أبداً (Infinite Loop)."},
 ];
 
-let cur=0, answers=new Array(Q.length).fill(-1), score=0;
+let cur=0, answers=new Array(Q.length).fill(-1), score=0, wrongCount=0;
 const TYPE={
   T:{label:"Theoretical",cls:"badge-T"},
   TR:{label:"Tracing",cls:"badge-TR"},
   C:{label:"Choose Code",cls:"badge-C"},
   TT:{label:"Tricky Trace",cls:"badge-TT"},
 };
+
+function updateScoreDisplay(){
+  document.getElementById('correctDisplay').textContent=score;
+  document.getElementById('wrongDisplay').textContent=wrongCount;
+}
 
 function render(){
   const qz=document.getElementById('quiz');
@@ -416,7 +625,7 @@ function render(){
   const tc=TYPE[q.t];
   document.getElementById('prog').style.width=((cur+1)/Q.length*100)+'%';
   document.getElementById('counter').textContent=`${cur+1} / ${Q.length}`;
-  document.getElementById('scoreDisplay').textContent=score;
+  updateScoreDisplay();
   const letters=['A','B','C','D'];
   let optsHtml='';
   q.o.forEach((opt,i)=>{
@@ -431,14 +640,28 @@ function render(){
     const content=hasCode?`<span class="opt-code">${opt}</span>`:opt;
     optsHtml+=`<button class="${cls}" onclick="pick(${i})"><span class="opt-letter">${letters[i]}</span>${content}</button>`;
   });
-  const feedHtml=answered?`<div class="feedback ${userAns===q.a?'correct':'wrong'}" style="display:block">
-    ${userAns===q.a?'✓ Correct!':`✗ Incorrect. Correct answer: <strong>${letters[q.a]}. ${q.o[q.a]}</strong>`}
-  </div>`:`<div class="feedback"></div>`;
+  
+  let feedbackAndExplain = '';
+  if(answered) {
+    const isCorrect = userAns===q.a;
+    feedbackAndExplain = `
+      <div class="feedback ${isCorrect?'correct':'wrong'}" style="display:block">
+        ${isCorrect ? '✓ Correct!' : `✗ Incorrect. Correct answer: <strong>${letters[q.a]}. ${q.o[q.a]}</strong>`}
+      </div>
+      <div class="explanation">
+        <span class="ex-title">💡 شرح الإجابة:</span>
+        ${q.ex}
+      </div>
+    `;
+  } else {
+    feedbackAndExplain = '<div class="feedback"></div>';
+  }
+
   qz.innerHTML=`<div class="q-card">
     <div class="q-meta"><span class="q-num">Q ${cur+1} of ${Q.length}</span>
     <span class="badge ${tc.cls}">${tc.label}</span></div>
     <div class="q-text">${q.q}</div>
-    <div class="options">${optsHtml}</div>${feedHtml}
+    <div class="options">${optsHtml}</div>${feedbackAndExplain}
     <div class="nav">
       <button class="btn btn-ghost" onclick="prev()" ${cur===0?'disabled':''}>← Previous</button>
       ${cur===Q.length-1
@@ -451,7 +674,8 @@ function pick(idx){
   if(answers[cur]!==-1) return;
   answers[cur]=idx;
   if(idx===Q[cur].a) score++;
-  document.getElementById('scoreDisplay').textContent=score;
+  else wrongCount++;
+  updateScoreDisplay();
   render();
 }
 function next(){if(cur<Q.length-1){cur++;render();}}
@@ -462,8 +686,13 @@ function showResults(){
   const r=document.getElementById('results');
   r.style.display='block';
   const pct=Math.round(score/Q.length*100);
+  const unanswered = Q.length - score - wrongCount;
   document.getElementById('resPct').textContent=pct+'%';
   document.getElementById('resScore').textContent=`${score} / ${Q.length} correct`;
+  document.getElementById('resCorrect').textContent=score;
+  document.getElementById('resWrong').textContent=wrongCount;
+  document.getElementById('resUnanswered').textContent=unanswered;
+  
   let grade,msg,color;
   if(pct>=90){grade='A+';msg='Outstanding! Fully exam-ready.';color='#22d46b'}
   else if(pct>=80){grade='A';msg='Excellent work!';color='#22d46b'}
@@ -497,7 +726,7 @@ function showResults(){
 }
 
 function restart(){
-  cur=0;answers=new Array(Q.length).fill(-1);score=0;
+  cur=0;answers=new Array(Q.length).fill(-1);score=0;wrongCount=0;
   document.getElementById('results').style.display='none';
   render();
 }
